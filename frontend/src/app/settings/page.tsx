@@ -60,7 +60,7 @@ export default function SettingsPage() {
   const [listeningExercises, setListeningExercises] = useState(true);
 
   // Appearance Dark Mode Dropdown
-  const [darkModeSelection, setDarkModeSelection] = useState<'SYSTEM DEFAULT' | 'DARK' | 'LIGHT'>('SYSTEM DEFAULT');
+  const [darkModeSelection, setDarkModeSelection] = useState<'SYSTEM DEFAULT' | 'DARK' | 'LIGHT'>('DARK');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -91,7 +91,11 @@ export default function SettingsPage() {
         if (savedListen !== null) setListeningExercises(savedListen === 'true');
 
         const savedMode = localStorage.getItem('duo_pref_dark_mode');
-        if (savedMode) setDarkModeSelection(savedMode as any);
+        if (savedMode) {
+          setDarkModeSelection(savedMode as any);
+        } else {
+          setDarkModeSelection('DARK');
+        }
       } catch (e) {
         console.warn('Failed to read preferences:', e);
       }
