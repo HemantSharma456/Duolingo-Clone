@@ -137,7 +137,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: 'LEARN', href: '/', renderIcon: () => <BirdhouseIcon /> },
   { name: 'LEADERBOARDS', href: '/leaderboard', renderIcon: () => <ShieldIcon /> },
-  { name: 'QUESTS', href: '/practice', renderIcon: () => <QuestsIcon /> },
+  { name: 'QUESTS', href: '/quests', renderIcon: () => <QuestsIcon /> },
   { name: 'SHOP', href: '/shop', renderIcon: () => <ShopIcon /> },
   { name: 'PROFILE', href: '/profile', renderIcon: () => <ProfileAvatarIcon /> },
 ];

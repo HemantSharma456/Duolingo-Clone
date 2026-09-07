@@ -82,7 +82,7 @@ export const PathRightRail: React.FC = () => {
             Daily Quests
           </h3>
           <Link
-            href="/practice"
+            href="/quests"
             className="text-xs font-black text-[#1cb0f6] uppercase tracking-wider hover:underline no-underline"
           >
             VIEW ALL
