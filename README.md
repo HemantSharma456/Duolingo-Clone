@@ -115,7 +115,8 @@ d:/Duolingo/
 │   ├── tests/
 │   │   ├── test_lesson_service.py     # Tests for validation, XP, normalization
 │   │   ├── test_streak_service.py     # Tests for consecutive, same-day, missed days
-│   │   └── test_progress_service.py   # Tests for skill completion & achievements
+│   │   ├── test_progress_service.py   # Tests for skill completion & achievements
+│   │   └── test_full_experience.py    # Comprehensive 12-check E2E test suite
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
@@ -139,8 +140,6 @@ d:/Duolingo/
 │   │   │   └── ui/                    # Button (3D), Modal, ProgressBar, AudioButton
 │   │   ├── context/                   # GameContext, SoundContext, ThemeContext
 │   │   └── services/                  # api.ts (Typed API client)
-└── scripts/
-    └── test_full_experience.py        # Comprehensive 12-check E2E test script
 ```
 
 ---
@@ -175,7 +174,7 @@ Run the full-scale automated test suite:
 python -m pytest backend/tests
 
 # End-to-end multi-language verification
-python scripts/test_full_experience.py
+python backend/tests/test_full_experience.py
 ```
 
 ---

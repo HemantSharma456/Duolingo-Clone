@@ -41,8 +41,9 @@ desktop.ini
 *.tmp
 *.temp
 
-# Docs directory
+# Docs and scripts directories
 docs/
+scripts/
 
 # Markdown files (Ignore all .md files except root README.md)
 *.md
