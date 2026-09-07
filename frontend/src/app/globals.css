@@ -670,12 +670,19 @@ input, select, textarea {
   display: flex;
   flex-direction: column;
   padding: 24px 28px;
-  border: 2px solid var(--duo-purple);
-  background-color: var(--duo-purple-light);
+  border: 2px solid #ce82ff;
+  background: linear-gradient(135deg, #f5efff 0%, #fbf8ff 100%);
   border-radius: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 3px 0 var(--border-rim);
+  box-shadow: 0 4px 16px rgba(206, 130, 255, 0.15);
   gap: 16px;
+}
+
+[data-theme='dark'] .duo-super-banner,
+.dark .duo-super-banner {
+  background: linear-gradient(135deg, #1b1235 0%, #281448 100%);
+  border-color: #a855f7;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.18);
 }
 
 @media (min-width: 640px) {

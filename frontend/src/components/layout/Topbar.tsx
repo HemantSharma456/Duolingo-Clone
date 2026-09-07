@@ -201,7 +201,7 @@ const GemChestIllustration = () => (
 export const Topbar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, refreshUser } = useGame();
+  const { user, refreshUser, isSuper, activateSuper, updateUserGems, updateUserHearts } = useGame();
   const { soundEnabled, toggleSound } = useSound();
   const { theme, toggleTheme } = useTheme();
 
@@ -301,12 +301,28 @@ export const Topbar: React.FC = () => {
   };
 
   const handleRefillGems = async () => {
+    const currentGems = user?.gems ?? 505;
+    const currentHearts = user?.hearts ?? 3;
+    if (currentHearts >= 5) {
+      setRefillMsg('Your hearts are already full! (5/5 ❤️)');
+      return;
+    }
+    if (currentGems < 350) {
+      setRefillMsg(`Need 350 gems to refill hearts! (Balance: ${currentGems} 💎)`);
+      return;
+    }
     setRefilling(true);
     setRefillMsg(null);
     try {
-      const res = await api.refillHearts('gems');
-      setRefillMsg(res.message);
-      await refreshUser();
+      updateUserGems(-350);
+      updateUserHearts(5);
+      setRefillMsg('Full hearts restored! ❤️❤️❤️❤️❤️ (-350 💎)');
+      try {
+        await api.refillHearts('gems');
+        await refreshUser();
+      } catch {
+        // persistent local state handles offline/deployed gracefully
+      }
     } catch (err: any) {
       setRefillMsg(err.message || 'Failed to refill with gems');
     } finally {
@@ -625,13 +641,43 @@ export const Topbar: React.FC = () => {
                 className={`flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl cursor-pointer transition-all select-none relative ${
                   activePopover === 'hearts' ? 'bg-[#202f36]' : 'hover:bg-[#202f36]/60'
                 }`}
-                title="Hearts"
+                title={isSuper ? 'Unlimited Hearts (Super Duolingo)' : 'Hearts'}
               >
-                <span className={user && user.hearts <= 1 ? 'animate-pulse' : ''}>
-                  <HeartIcon />
-                </span>
+                {isSuper ? (
+                  <svg width="26" height="25" viewBox="0 0 30 28" fill="none" className="shrink-0 select-none">
+                    <defs>
+                      <linearGradient id="topbarSuperPillGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#00cd9c" />
+                        <stop offset="45%" stopColor="#1cb0f6" />
+                        <stop offset="100%" stopColor="#a855f7" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M15 25.5L13.3 23.9C7.2 18.4 3 14.6 3 9.9C3 6.1 6 3 9.8 3C12 3 14.1 4 15 5.7C15.9 4 18 3 20.2 3C24 3 27 6.1 27 9.9C27 14.6 22.8 18.4 16.7 23.9L15 25.5Z"
+                      fill="url(#topbarSuperPillGrad)"
+                      stroke="#ffffff"
+                      strokeWidth="2.2"
+                      strokeLinejoin="round"
+                    />
+                    <text
+                      x="15"
+                      y="15"
+                      textAnchor="middle"
+                      fill="#ffffff"
+                      fontSize="14"
+                      fontWeight="900"
+                      dominantBaseline="central"
+                    >
+                      ∞
+                    </text>
+                  </svg>
+                ) : (
+                  <span className={user && user.hearts <= 1 ? 'animate-pulse' : ''}>
+                    <HeartIcon />
+                  </span>
+                )}
                 <span className="text-[#ff4b4b] font-black text-base leading-none">
-                  {user?.hearts ?? 3}
+                  {isSuper ? '∞' : (user?.hearts ?? 3)}
                 </span>
               </button>
 
@@ -647,10 +693,31 @@ export const Topbar: React.FC = () => {
                     onMouseEnter={() => openPopover('hearts')}
                     onMouseLeave={scheduleClose}
                   >
-                    {/* Header Title: Hearts */}
-                    <h3 className="text-center font-black text-[22px] text-[var(--text-primary)] tracking-tight leading-none mb-4">
-                      Hearts
-                    </h3>
+                    {isSuper ? (
+                      <div className="text-center py-1">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#a855f7] to-[#ec4899] text-white text-xs font-black uppercase tracking-wider mb-3 shadow-sm">
+                          <span>✨</span> SUPER DUOLINGO
+                        </div>
+                        <h3 className="font-black text-[22px] text-[var(--text-primary)] tracking-tight leading-none mb-2">
+                          Unlimited Hearts Active
+                        </h3>
+                        <p className="font-bold text-[14px] text-[var(--text-secondary)] leading-snug mb-5">
+                          You never run out of hearts while learning with Super Duolingo! Keep practicing without interruptions.
+                        </p>
+                        <Link
+                          href="/shop"
+                          onClick={() => setActivePopover(null)}
+                          className="w-full py-3 rounded-2xl bg-[#1cb0f6] hover:bg-[#1899d6] border-b-4 border-[#1479ab] active:translate-y-0.5 text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md block no-underline text-center"
+                        >
+                          GO TO SHOP
+                        </Link>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Header Title: Hearts */}
+                        <h3 className="text-center font-black text-[22px] text-[var(--text-primary)] tracking-tight leading-none mb-4">
+                          Hearts
+                        </h3>
 
                     {/* 5 Hearts Row */}
                     <div className="flex items-center justify-center gap-3.5 mb-4">
@@ -813,10 +880,12 @@ export const Topbar: React.FC = () => {
                         </span>
                       </Link>
                     </div>
-                  </div>
-                </>
-              )}
-            </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
           </div>
         </div>
       </header>
