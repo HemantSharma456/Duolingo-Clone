@@ -40,3 +40,18 @@ desktop.ini
 # Temporary files
 *.tmp
 *.temp
+
+# Docs directory
+docs/
+
+# Markdown files (Ignore all .md files except root README.md)
+*.md
+**/*.md
+!/README.md
+!README.md
+
+# AI assistant rule files
+AGENTS.md
+CLAUDE.md
+**/AGENTS.md
+**/CLAUDE.md

@@ -139,13 +139,6 @@ d:/Duolingo/
 │   │   │   └── ui/                    # Button (3D), Modal, ProgressBar, AudioButton
 │   │   ├── context/                   # GameContext, SoundContext, ThemeContext
 │   │   └── services/                  # api.ts (Typed API client)
-├── docs/                              # Technical architecture, API, and DB documentation
-│   ├── API.md                         # Complete REST API endpoint documentation
-│   ├── ARCHITECTURE.md                # System design & architecture
-│   ├── DATABASE.md                    # Relational schema & entity relationships
-│   ├── DATA_FLOW.md                   # Sequence diagrams of lesson & streak workflows
-│   ├── INTERVIEW_GUIDE.md             # Code-level interview preparation guide
-│   └── REQUIREMENTS_CHECKLIST.md      # Full assignment criteria checklist
 └── scripts/
     └── test_full_experience.py        # Comprehensive 12-check E2E test script
 ```
@@ -187,12 +180,45 @@ python scripts/test_full_experience.py
 
 ---
 
-## 📄 Documentation & Evaluation Reference
-A complete suite of architectural specifications, database schema diagrams, and interview preparation guides is provided in the `docs/` directory:
-- 🏗️ **[System Architecture](docs/ARCHITECTURE.md)**: Detailed breakdown of presentation, API, service, and database tiers.
-- 🗄️ **[Database Schema & ER Model](docs/DATABASE.md)**: 10 normalized tables with foreign keys and relationships.
-- 🌐 **[REST API Reference](docs/API.md)**: Complete request/response schemas and endpoints.
-- 🔄 **[Data Flow Diagrams](docs/DATA_FLOW.md)**: Sequence diagrams of lesson progression, streaks, and XP calculations.
-- 🎯 **[Interview Preparation Guide](docs/INTERVIEW_GUIDE.md)**: Code-level answers to 50+ evaluation questions.
-- ✅ **[Assignment Requirements Checklist](docs/REQUIREMENTS_CHECKLIST.md)**: Feature-by-feature verification matrix against assignment criteria.
+## 🗄️ Database Schema & Architecture Overview
+
+The backend uses **SQLite + SQLAlchemy 2.0 ORM** with foreign keys enabled (`PRAGMA foreign_keys=ON`) and 3NF normalization across 10 core tables:
+
+| Table | Purpose | Key Columns / Relationships |
+|---|---|---|
+| `users` | Learner account & gamification state | `id`, `username`, `email`, `hearts`, `gems`, `streak`, `total_xp`, `daily_goal`, `active_course_id` |
+| `courses` | Language offerings (11 languages) | `id`, `title`, `language_code`, `flag_emoji`, `learner_count` |
+| `units` | Sequential chapters within a course | `id`, `course_id` (FK), `unit_number`, `title`, `color_theme` |
+| `skills` | Winding path nodes (circles on tree) | `id`, `unit_id` (FK), `title`, `icon_name`, `order_index` |
+| `lessons` | Interactive pedagogical sessions | `id`, `skill_id` (FK), `title`, `order_index`, `xp_reward` |
+| `exercises` | Multi-format exercise questions | `id`, `lesson_id` (FK), `type`, `prompt`, `prompt_translation`, `correct_answer`, `options_json` |
+| `user_progress` | Per-skill unlocks & completion | `id`, `user_id` (FK), `skill_id` (FK), `is_unlocked`, `is_completed`, `crowns` |
+| `lesson_attempts` | Audit log of submitted lessons | `id`, `user_id` (FK), `lesson_id` (FK), `score`, `mistakes`, `xp_earned` |
+| `daily_activities` | Calendar activity records | `id`, `user_id` (FK), `activity_date`, `xp_earned` |
+| `achievements` / `user_achievements` | Badges and unlocks | `id`, `code`, `title`, `threshold`, `badge_icon` |
+
+---
+
+## 🌐 REST API Overview
+
+All endpoints return JSON and adhere to standard REST principles:
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register learner profile with language, motivation, and daily goal |
+| `POST` | `/api/auth/login` | Authenticate user session |
+| `GET` | `/api/users/me` | Fetch active learner profile, hearts, gems, streak, and XP |
+| `PUT` | `/api/users/me/daily-goal` | Update daily XP goal target (10, 20, 30, 50 XP) |
+| `POST` | `/api/users/me/refill-hearts` | Refill hearts via gems or free practice |
+| `POST` | `/api/users/shop/purchase` | Purchase power-ups (Streak Freeze: 200💎, Heart Refill: 350💎) |
+| `GET` | `/api/courses` | List all available language courses |
+| `POST` | `/api/courses/select` | Switch active course and load corresponding curriculum |
+| `GET` | `/api/courses/current/path` | Fetch units, skills, crowns, and lock/unlock progression |
+| `GET` | `/api/lessons/{id}` | Load exercises for a lesson (correct answers hidden from client) |
+| `POST` | `/api/lessons/{id}/submit-exercise` | Validate answer, deduct hearts on mistake, return feedback |
+| `POST` | `/api/lessons/{id}/complete` | Calculate server-side XP, update streak, advance skill progress |
+| `GET` | `/api/lessons/practice/session` | Fetch practice exercises for active course |
+| `GET` | `/api/leaderboard` | Dynamic leaderboard rankings sorted by XP |
+| `GET` | `/api/achievements` | Badges catalog and user unlocked achievements |
+
 
