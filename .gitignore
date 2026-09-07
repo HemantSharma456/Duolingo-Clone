@@ -41,9 +41,10 @@ desktop.ini
 *.tmp
 *.temp
 
-# Docs and scripts directories
+# Docs, scripts, and deployment specs
 docs/
 scripts/
+render.yaml
 
 # Markdown files (Ignore all .md files except root README.md)
 *.md
