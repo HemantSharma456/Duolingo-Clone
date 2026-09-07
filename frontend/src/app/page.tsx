@@ -135,8 +135,14 @@ export default function LearnPage() {
     progressManager.getCourseProgress(currentCourseId)
   );
 
-  // Active Skill Popover (tracks open level number or null)
-  const [activePopoverLevel, setActivePopoverLevel] = useState<number | null>(null);
+  // Active Skill Popover (defaults to current active level so learner immediately sees next lesson)
+  const [activePopoverLevel, setActivePopoverLevel] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const p = progressManager.getCourseProgress(currentCourseId);
+      return p.currentLevel || 1;
+    }
+    return 1;
+  });
 
   // Milestone Chest Reward Modal State
   const [chestModal, setChestModal] = useState<{
@@ -172,13 +178,18 @@ export default function LearnPage() {
 
   // Synchronize progress whenever course changes or progress event is dispatched
   useEffect(() => {
-    setProgress(progressManager.getCourseProgress(currentCourseId));
+    const p = progressManager.getCourseProgress(currentCourseId);
+    setProgress(p);
+    setActivePopoverLevel(p.currentLevel || 1);
 
     const handleProgressUpdate = (e: any) => {
       if (e.detail && e.detail.courseId === currentCourseId) {
         setProgress(e.detail);
+        setActivePopoverLevel(e.detail.currentLevel || 1);
       } else {
-        setProgress(progressManager.getCourseProgress(currentCourseId));
+        const latest = progressManager.getCourseProgress(currentCourseId);
+        setProgress(latest);
+        setActivePopoverLevel(latest.currentLevel || 1);
       }
     };
 
@@ -330,9 +341,9 @@ export default function LearnPage() {
 
               {/* Render Nodes for this Unit */}
               {unit.nodes.map((node) => {
-                const isCompleted = progress.completedLevels.includes(node.level);
-                const isActive = progress.currentLevel === node.level;
-                const isLocked = !isCompleted && progress.currentLevel < node.level;
+                const isCompleted = progress.completedLevels.includes(node.level) || progress.currentLevel > node.level;
+                const isActive = !isCompleted && progress.currentLevel === node.level;
+                const isLocked = !isCompleted && !isActive;
                 const isClaimed = progress.claimedChests.includes(node.level);
                 const isPopoverOpen = activePopoverLevel === node.level;
 

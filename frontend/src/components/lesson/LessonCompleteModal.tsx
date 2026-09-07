@@ -13,15 +13,23 @@ interface LessonCompleteModalProps {
   isOpen: boolean;
   result: LessonCompleteResponse | null;
   accuracy: number;
+  currentLessonId?: number;
+  courseId?: number;
 }
 
 export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
   isOpen,
   result,
   accuracy,
+  currentLessonId = 1,
+  courseId,
 }) => {
   const router = useRouter();
   const { playCompleteFanfare } = useSound();
+
+  const isFinalCourseLevel = currentLessonId >= 24;
+  const nextLessonId = currentLessonId + 1;
+  const isNextChest = [4, 9, 16, 21].includes(nextLessonId);
 
   useEffect(() => {
     if (isOpen) {
@@ -41,6 +49,19 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
   }, [isOpen, playCompleteFanfare]);
 
   if (!isOpen || !result) return null;
+
+  const handleStartNextLevel = () => {
+    if (isFinalCourseLevel || isNextChest) {
+      router.push('/');
+    } else {
+      const query = courseId ? `?course_id=${courseId}` : '';
+      router.push(`/lesson/${nextLessonId}${query}`);
+    }
+  };
+
+  const handleBackToPath = () => {
+    router.push('/');
+  };
 
   return (
     <Modal isOpen={isOpen} maxWidth="max-w-lg">
@@ -104,17 +125,29 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
           </div>
         )}
 
-        {/* Continue Button */}
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={() => {
-            router.push('/');
-          }}
-        >
-          CONTINUE
-        </Button>
+        {/* Action Buttons: Seamless Next Level Launch & Path Return */}
+        <div className="flex flex-col gap-3">
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            onClick={handleStartNextLevel}
+          >
+            {isFinalCourseLevel
+              ? 'VIEW COURSE TROPHY 🏆'
+              : isNextChest
+              ? 'CLAIM CHEST ON PATH 🎁'
+              : `START LEVEL ${nextLessonId} ➔`}
+          </Button>
+
+          <button
+            type="button"
+            onClick={handleBackToPath}
+            className="w-full h-12 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-black text-xs uppercase tracking-wider transition-colors cursor-pointer"
+          >
+            Back to Learning Path
+          </button>
+        </div>
       </div>
     </Modal>
   );

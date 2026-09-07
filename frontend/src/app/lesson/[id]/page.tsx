@@ -45,6 +45,24 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
   const [completeResult, setCompleteResult] = useState<LessonCompleteResponse | null>(null);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
 
+  // Consistently resolve active course ID
+  const resolveActiveCourseId = (): number => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const qCourse = urlParams.get('course_id');
+      if (qCourse) {
+        const parsed = parseInt(qCourse, 10);
+        if (!isNaN(parsed)) return parsed;
+      }
+      const stored = localStorage.getItem('duo_active_course_id');
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        if (!isNaN(parsed)) return parsed;
+      }
+    }
+    return user?.current_course_id || 8;
+  };
+
   useEffect(() => {
     if (user) {
       setHearts(user.hearts);
@@ -52,29 +70,25 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
   }, [user]);
 
   useEffect(() => {
+    // Reset all exercise and modal states when advancing to a new lesson
+    setCurrentStep(0);
+    setSelectedAnswer(null);
+    setFeedbackStatus('idle');
+    setCorrectAnswer(null);
+    setExplanation(null);
+    setIsSubmitting(false);
+    setMistakesCount(0);
+    setCompleteResult(null);
+    setIsCompleteOpen(false);
+    setLoading(true);
+
     async function loadLesson() {
-      let activeCourseId: number | undefined = undefined;
+      const activeCourseId = resolveActiveCourseId();
       let activeLang: string | undefined = undefined;
       if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search);
-        const qCourse = urlParams.get('course_id');
-        if (qCourse) {
-          const parsed = parseInt(qCourse, 10);
-          if (!isNaN(parsed)) activeCourseId = parsed;
-        }
         const qLang = urlParams.get('lang');
         if (qLang) activeLang = qLang;
-
-        if (!activeCourseId) {
-          const stored = localStorage.getItem('duo_active_course_id');
-          if (stored) {
-            const parsed = parseInt(stored, 10);
-            if (!isNaN(parsed)) activeCourseId = parsed;
-          }
-        }
-      }
-      if (!activeCourseId && user?.current_course_id) {
-        activeCourseId = user.current_course_id;
       }
 
       try {
@@ -82,6 +96,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
         if (data && data.exercises && data.exercises.length > 0) {
           setLesson(data);
           setError(null);
+          setLoading(false);
           return;
         }
       } catch (err: any) {
@@ -100,7 +115,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
       }
     }
     loadLesson();
-  }, [lessonId, user?.current_course_id]);
+  }, [lessonId]);
 
   if (loading) {
     return (
@@ -241,13 +256,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
       setCompleteResult(finalResult);
       setIsCompleteOpen(true);
 
-      let activeCourse = 2; // Default French
-      if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('duo_active_course_id');
-        if (stored) activeCourse = parseInt(stored, 10) || 2;
-      }
-      if (user?.current_course_id) activeCourse = user.current_course_id;
-
+      const activeCourse = resolveActiveCourseId();
       progressManager.completeLevel(activeCourse, lessonId);
       updateUserGems(finalResult.gems_earned || 10);
       try {
@@ -339,6 +348,8 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
         isOpen={isCompleteOpen}
         result={completeResult}
         accuracy={accuracy}
+        currentLessonId={lessonId}
+        courseId={resolveActiveCourseId()}
       />
     </div>
   );

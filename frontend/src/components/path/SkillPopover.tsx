@@ -99,14 +99,9 @@ export const SkillPopover: React.FC<SkillPopoverProps> = ({
         {/* Elongated Pill 3D White Button with Green Text */}
         <Link
           href={`/lesson/${lessonId || 1}${courseId ? `?course_id=${courseId}` : ''}`}
-          className="no-underline block"
+          className="w-full h-[52px] rounded-2xl bg-white hover:bg-[#f7f7f7] border-b-[4px] border-[#e5e5e5] active:border-b-0 active:translate-y-1 text-[#58cc02] font-black text-[15px] uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center justify-center no-underline select-none"
         >
-          <button
-            type="button"
-            className="w-full h-[52px] rounded-2xl bg-white hover:bg-[#f7f7f7] border-b-[4px] border-[#e5e5e5] active:border-b-0 active:translate-y-1 text-[#58cc02] font-black text-[15px] uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center justify-center"
-          >
-            {isCompleted ? 'PRACTICE +5 XP' : 'START +10 XP'}
-          </button>
+          {isCompleted ? 'PRACTICE +5 XP' : 'START +10 XP'}
         </Link>
 
         {/* Peeking Duo Owl on the right corner */}

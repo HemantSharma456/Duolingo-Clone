@@ -29,7 +29,8 @@ def test_full_flow():
 
     # 1. Fetch available courses
     print("1. Fetching available courses...")
-    r = requests.get(f"{BASE_URL}/api/courses")
+    s = requests.Session()
+    r = s.get(f"{BASE_URL}/api/courses")
     assert r.status_code == 200, f"Expected 200, got {r.status_code}"
     courses = r.json()
     print(f"   -> Found {len(courses)} courses:")
@@ -51,9 +52,9 @@ def test_full_flow():
         "motivation": "travel",
         "proficiency": "scratch"
     }
-    r = requests.post(f"{BASE_URL}/api/auth/register", json=reg_payload)
+    r = s.post(f"{BASE_URL}/api/auth/register", json=reg_payload)
     if r.status_code == 400: # Already registered, log in
-        r = requests.post(f"{BASE_URL}/api/auth/login", json={"username": uname, "password": "secretfrenchpassword"})
+        r = s.post(f"{BASE_URL}/api/auth/login", json={"username": uname, "password": "secretfrenchpassword"})
     assert r.status_code == 200, f"Auth failed: {r.text}"
     res_data = r.json()
     user_data = res_data.get("user", res_data)
@@ -62,7 +63,7 @@ def test_full_flow():
 
     # 3. Select French course explicitly
     print("\n3. Selecting French course (Course ID 2)...")
-    r = requests.post(f"{BASE_URL}/api/courses/select", json={"course_id": 2})
+    r = s.post(f"{BASE_URL}/api/courses/select", json={"course_id": 2})
     assert r.status_code == 200, f"Select course failed: {r.text}"
     path = r.json()
     print(f"   -> Active Course: {path['flag_emoji']} {path['course_title']}")
@@ -79,7 +80,7 @@ def test_full_flow():
     # 4. Fetch French Lesson 1
     first_lesson_id = skill1["first_lesson_id"]
     print(f"\n4. Fetching French Lesson (ID: {first_lesson_id})...")
-    r = requests.get(f"{BASE_URL}/api/lessons/{first_lesson_id}")
+    r = s.get(f"{BASE_URL}/api/lessons/{first_lesson_id}")
     assert r.status_code == 200, f"Get lesson failed: {r.text}"
     lesson = r.json()
     print(f"   -> Lesson Title: '{lesson['title']}' ({len(lesson['exercises'])} exercises)")
@@ -98,7 +99,7 @@ def test_full_flow():
                 ans1 = opt
                 break
     print(f"\n5. Submitting Ex 1 ({ex1['type']}): '{ex1['prompt']}' with answer '{ans1}'")
-    r = requests.post(
+    r = s.post(
         f"{BASE_URL}/api/lessons/{first_lesson_id}/submit-exercise",
         json={"exercise_id": ex1["id"], "answer": ans1}
     )
@@ -113,7 +114,7 @@ def test_full_flow():
     # 6. Submit Exercise 2 with Intentional Mistake (Test Heart Loss)
     ex2 = lesson["exercises"][1]
     print(f"\n6. Submitting Ex 2 ({ex2['type']}) with INTENTIONAL MISTAKE...")
-    r = requests.post(
+    r = s.post(
         f"{BASE_URL}/api/lessons/{first_lesson_id}/submit-exercise",
         json={"exercise_id": ex2["id"], "answer": "wrong answer"}
     )
@@ -126,7 +127,7 @@ def test_full_flow():
 
     # 7. Complete French Lesson
     print("\n7. Completing French Lesson...")
-    r = requests.post(
+    r = s.post(
         f"{BASE_URL}/api/lessons/{first_lesson_id}/complete",
         json={"mistakes_count": 1, "time_spent_seconds": 45}
     )
@@ -139,7 +140,7 @@ def test_full_flow():
 
     # 8. Test Active Course Practice
     print("\n8. Testing Practice Session for active course...")
-    r = requests.get(f"{BASE_URL}/api/lessons/practice/session")
+    r = s.get(f"{BASE_URL}/api/lessons/practice/session")
     assert r.status_code == 200, f"Practice failed: {r.text}"
     practice_data = r.json()
     print(f"   -> Practice session: '{practice_data['title']}' ({len(practice_data['exercises'])} exercises)")
@@ -148,7 +149,7 @@ def test_full_flow():
 
     # 9. Test Shop Purchase
     print("\n9. Testing Shop item purchase (Streak Freeze)...")
-    r = requests.post(f"{BASE_URL}/api/users/shop/purchase", json={"item_type": "streak_freeze"})
+    r = s.post(f"{BASE_URL}/api/users/shop/purchase", json={"item_type": "streak_freeze"})
     assert r.status_code == 200, f"Shop purchase failed: {r.text}"
     shop_res = r.json()
     print(f"   -> Purchase result: {shop_res['message']}, Remaining gems: {shop_res['gems']}")
@@ -156,7 +157,7 @@ def test_full_flow():
 
     # 10. Switch to German (Course ID 3)
     print("\n10. Switching to German course (Course ID 3)...")
-    r = requests.post(f"{BASE_URL}/api/courses/select", json={"course_id": 3})
+    r = s.post(f"{BASE_URL}/api/courses/select", json={"course_id": 3})
     assert r.status_code == 200
     de_path = r.json()
     print(f"   -> Active Course: {de_path['flag_emoji']} {de_path['course_title']}")
@@ -166,7 +167,7 @@ def test_full_flow():
 
     # 11. Switch to Japanese (Course ID 6)
     print("\n11. Switching to Japanese course (Course ID 6)...")
-    r = requests.post(f"{BASE_URL}/api/courses/select", json={"course_id": 6})
+    r = s.post(f"{BASE_URL}/api/courses/select", json={"course_id": 6})
     assert r.status_code == 200
     ja_path = r.json()
     print(f"   -> Active Course: {ja_path['flag_emoji']} {ja_path['course_title']}")
@@ -175,7 +176,7 @@ def test_full_flow():
 
     # 12. Switch back to Spanish (Course ID 1)
     print("\n12. Switching to Spanish course (Course ID 1)...")
-    r = requests.post(f"{BASE_URL}/api/courses/select", json={"course_id": 1})
+    r = s.post(f"{BASE_URL}/api/courses/select", json={"course_id": 1})
     assert r.status_code == 200
     es_path = r.json()
     print(f"   -> Active Course: {es_path['flag_emoji']} {es_path['course_title']}")
