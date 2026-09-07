@@ -91,9 +91,9 @@ export const SkillPopover: React.FC<SkillPopoverProps> = ({
           {title || 'Order at a café'}
         </h4>
 
-        {/* Lesson Count Subtitle */}
+        {/* Level Status Subtitle */}
         <p className="text-[14px] font-bold text-white mt-1.5 mb-5">
-          Lesson {lessonNumber || 1} of {totalLessons || 4}
+          Level {lessonId || 1} • {isCompleted ? 'Completed ✓' : 'Ready to Start'}
         </p>
 
         {/* Elongated Pill 3D White Button with Green Text */}

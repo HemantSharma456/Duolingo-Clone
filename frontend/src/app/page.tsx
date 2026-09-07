@@ -178,30 +178,60 @@ export default function LearnPage() {
 
   // Synchronize progress whenever course changes or progress event is dispatched
   useEffect(() => {
-    const p = progressManager.getCourseProgress(currentCourseId);
+    let p = progressManager.getCourseProgress(currentCourseId);
+
+    // Auto-heal: If user has completed a lesson (e.g. daily quest 10 XP reached) but progress is still level 1
+    if (p.currentLevel === 1 && p.completedLevels.length === 0) {
+      const hasEarnedXp = user?.daily_xp !== undefined && user.daily_xp >= 10;
+      const hasFlag =
+        typeof window !== 'undefined' &&
+        (localStorage.getItem('duo_completed_level_1') === 'true' ||
+          localStorage.getItem('duo_user_progress') !== null ||
+          localStorage.getItem('duo_global_progress') !== null);
+
+      if (hasEarnedXp || hasFlag) {
+        p = progressManager.completeLevel(currentCourseId, 1);
+      }
+    }
+
     setProgress(p);
     setActivePopoverLevel(p.currentLevel || 1);
 
-    const handleProgressUpdate = (e: any) => {
-      if (e.detail && e.detail.courseId === currentCourseId) {
-        setProgress(e.detail);
-        setActivePopoverLevel(e.detail.currentLevel || 1);
-      } else {
-        const latest = progressManager.getCourseProgress(currentCourseId);
-        setProgress(latest);
-        setActivePopoverLevel(latest.currentLevel || 1);
-      }
+    const handleProgressUpdate = () => {
+      const latest = progressManager.getCourseProgress(currentCourseId);
+      setProgress(latest);
+      setActivePopoverLevel(latest.currentLevel || 1);
     };
 
     window.addEventListener('duo_progress_updated', handleProgressUpdate);
     return () => window.removeEventListener('duo_progress_updated', handleProgressUpdate);
-  }, [currentCourseId]);
+  }, [currentCourseId, user?.daily_xp]);
 
   useEffect(() => {
     async function loadPath() {
       try {
         const data = await api.getCurrentPath();
         setPathData(data);
+
+        // If backend returned completed units/skills, sync with progressManager
+        if (data && data.units) {
+          let backendLessonsCompleted = 0;
+          for (const u of data.units) {
+            for (const s of u.skills) {
+              if (s.is_completed || s.lessons_completed > 0) {
+                backendLessonsCompleted += (s.lessons_completed || 1);
+              }
+            }
+          }
+          if (backendLessonsCompleted > 0) {
+            const currentProg = progressManager.getCourseProgress(currentCourseId);
+            if (currentProg.currentLevel <= backendLessonsCompleted) {
+              const updated = progressManager.completeLevel(currentCourseId, backendLessonsCompleted);
+              setProgress(updated);
+              setActivePopoverLevel(updated.currentLevel || 1);
+            }
+          }
+        }
       } catch (err: any) {
         console.warn('API error loading path, using fallback data:', err);
       } finally {
@@ -215,7 +245,7 @@ export default function LearnPage() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentCourseId]);
 
   const handleLockedClick = (name: string) => {
     setLockedTooltip(`Complete previous lessons to unlock ${name}!`);

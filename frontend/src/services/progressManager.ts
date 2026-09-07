@@ -21,82 +21,73 @@ export const progressManager = {
     }
 
     try {
-      // 1. Direct course-specific progress
-      const stored = localStorage.getItem(`${STORAGE_PREFIX}${courseId}`);
-      let currentProgress: CourseProgress | null = null;
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        currentProgress = {
-          courseId,
-          currentLevel: Math.max(1, parsed.currentLevel || 1),
-          completedLevels: Array.isArray(parsed.completedLevels) ? parsed.completedLevels : [],
-          claimedChests: Array.isArray(parsed.claimedChests) ? parsed.claimedChests : [],
-        };
-      }
+      // 1. Gather all possible storage keys
+      const keysToCheck = [
+        'duo_user_progress',
+        'duo_global_progress',
+        `${STORAGE_PREFIX}${courseId}`,
+        ...[1, 2, 6, 8, 3, 4, 5, 7, 9, 10, 11].map((id) => `${STORAGE_PREFIX}${id}`),
+      ];
 
-      // 2. Global fallback progress backup (to ensure progress is never lost if course ID varied)
-      const globalStored = localStorage.getItem('duo_global_progress');
-      if (globalStored) {
-        try {
-          const globalParsed = JSON.parse(globalStored);
-          if (globalParsed && typeof globalParsed === 'object') {
-            const gLevel = Math.max(1, globalParsed.currentLevel || 1);
-            const gCompleted = Array.isArray(globalParsed.completedLevels) ? globalParsed.completedLevels : [];
-            const gChests = Array.isArray(globalParsed.claimedChests) ? globalParsed.claimedChests : [];
+      let maxLevel = 1;
+      const allCompleted = new Set<number>();
+      const allChests = new Set<number>();
 
-            if (!currentProgress || (currentProgress.currentLevel === 1 && currentProgress.completedLevels.length === 0 && (gLevel > 1 || gCompleted.length > 0))) {
-              currentProgress = {
-                courseId,
-                currentLevel: gLevel,
-                completedLevels: gCompleted,
-                claimedChests: gChests,
-              };
-              localStorage.setItem(`${STORAGE_PREFIX}${courseId}`, JSON.stringify(currentProgress));
-            }
-          }
-        } catch {
-          // ignore
-        }
-      }
-
-      // 3. Self-heal from any other course key if this course still has no progress
-      if (!currentProgress || (currentProgress.currentLevel === 1 && currentProgress.completedLevels.length === 0)) {
-        const commonCourseIds = [1, 2, 8, 3, 4, 5, 6, 7];
-        for (const cid of commonCourseIds) {
+      // Check all course and global storage keys
+      for (const key of keysToCheck) {
+        const item = localStorage.getItem(key);
+        if (item) {
           try {
-            const altStored = localStorage.getItem(`${STORAGE_PREFIX}${cid}`);
-            if (altStored) {
-              const altParsed = JSON.parse(altStored);
-              if (altParsed && (altParsed.currentLevel > 1 || (altParsed.completedLevels && altParsed.completedLevels.length > 0))) {
-                currentProgress = {
-                  courseId,
-                  currentLevel: Math.max(1, altParsed.currentLevel || 1),
-                  completedLevels: Array.isArray(altParsed.completedLevels) ? altParsed.completedLevels : [],
-                  claimedChests: Array.isArray(altParsed.claimedChests) ? altParsed.claimedChests : [],
-                };
-                localStorage.setItem(`${STORAGE_PREFIX}${courseId}`, JSON.stringify(currentProgress));
-                localStorage.setItem('duo_global_progress', JSON.stringify(currentProgress));
-                break;
+            const parsed = JSON.parse(item);
+            if (parsed && typeof parsed === 'object') {
+              if (parsed.currentLevel && Number(parsed.currentLevel) > maxLevel) {
+                maxLevel = Number(parsed.currentLevel);
+              }
+              if (Array.isArray(parsed.completedLevels)) {
+                parsed.completedLevels.forEach((lvl: number) => allCompleted.add(Number(lvl)));
+              }
+              if (Array.isArray(parsed.claimedChests)) {
+                parsed.claimedChests.forEach((ch: number) => allChests.add(Number(ch)));
               }
             }
           } catch {
-            // ignore
+            // ignore JSON parse error
           }
         }
       }
 
-      if (currentProgress) {
-        // Guarantee completedLevels consistency: all levels up to currentLevel - 1 (except unclaimed chests) are completed
-        if (currentProgress.currentLevel > 1) {
-          const compSet = new Set(currentProgress.completedLevels);
-          for (let i = 1; i < currentProgress.currentLevel; i++) {
-            if (![4, 9, 16, 21].includes(i)) {
-              compSet.add(i);
-            }
+      // Check level-specific discrete flags (duo_completed_level_1, etc.)
+      for (let i = 1; i <= 24; i++) {
+        if (localStorage.getItem(`duo_completed_level_${i}`) === 'true') {
+          allCompleted.add(i);
+          if (i >= maxLevel) {
+            maxLevel = i + 1;
           }
-          currentProgress.completedLevels = Array.from(compSet).sort((a, b) => a - b);
         }
-        return currentProgress;
+      }
+
+      // If any progress was found across any key or flag
+      if (maxLevel > 1 || allCompleted.size > 0) {
+        // Guarantee all lesson levels below maxLevel are marked completed
+        for (let i = 1; i < maxLevel; i++) {
+          if (![4, 9, 16, 21].includes(i)) {
+            allCompleted.add(i);
+          }
+        }
+
+        const consolidated: CourseProgress = {
+          courseId,
+          currentLevel: maxLevel,
+          completedLevels: Array.from(allCompleted).sort((a, b) => a - b),
+          claimedChests: Array.from(allChests).sort((a, b) => a - b),
+        };
+
+        // Cache consolidated progress to current course, global, and unified keys
+        localStorage.setItem(`${STORAGE_PREFIX}${courseId}`, JSON.stringify(consolidated));
+        localStorage.setItem('duo_user_progress', JSON.stringify(consolidated));
+        localStorage.setItem('duo_global_progress', JSON.stringify(consolidated));
+
+        return consolidated;
       }
     } catch (e) {
       console.warn('Failed to parse course progress:', e);
@@ -117,12 +108,18 @@ export const progressManager = {
 
     const current = this.getCourseProgress(courseId);
     const completedSet = new Set(current.completedLevels);
+
     // Mark this level and all prior lesson levels as completed
     for (let i = 1; i <= levelNum; i++) {
       if (![4, 9, 16, 21].includes(i) || i === levelNum) {
         completedSet.add(i);
       }
     }
+
+    // Set individual level completion flag
+    try {
+      localStorage.setItem(`duo_completed_level_${levelNum}`, 'true');
+    } catch {}
 
     // Advance currentLevel to at least levelNum + 1
     const nextLevel = Math.max(current.currentLevel, levelNum + 1);
@@ -135,9 +132,19 @@ export const progressManager = {
     };
 
     try {
+      // 1. Save to primary keys
       localStorage.setItem(`${STORAGE_PREFIX}${courseId}`, JSON.stringify(updated));
+      localStorage.setItem('duo_user_progress', JSON.stringify(updated));
       localStorage.setItem('duo_global_progress', JSON.stringify(updated));
       localStorage.setItem('duo_active_course_id', courseId.toString());
+
+      // 2. Broadcast to all common course IDs so no course ever remains stuck
+      const allCourseIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      for (const cid of allCourseIds) {
+        localStorage.setItem(`${STORAGE_PREFIX}${cid}`, JSON.stringify({ ...updated, courseId: cid }));
+      }
+
+      // 3. Dispatch global progress update event
       window.dispatchEvent(new CustomEvent('duo_progress_updated', { detail: updated }));
     } catch (e) {
       console.error('Failed to save level progress:', e);
@@ -172,8 +179,15 @@ export const progressManager = {
 
     try {
       localStorage.setItem(`${STORAGE_PREFIX}${courseId}`, JSON.stringify(updated));
+      localStorage.setItem('duo_user_progress', JSON.stringify(updated));
       localStorage.setItem('duo_global_progress', JSON.stringify(updated));
       localStorage.setItem('duo_active_course_id', courseId.toString());
+
+      const allCourseIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      for (const cid of allCourseIds) {
+        localStorage.setItem(`${STORAGE_PREFIX}${cid}`, JSON.stringify({ ...updated, courseId: cid }));
+      }
+
       window.dispatchEvent(new CustomEvent('duo_progress_updated', { detail: updated }));
     } catch (e) {
       console.error('Failed to save chest claim:', e);
@@ -204,8 +218,15 @@ export const progressManager = {
 
     try {
       localStorage.setItem(`${STORAGE_PREFIX}${courseId}`, JSON.stringify(updated));
+      localStorage.setItem('duo_user_progress', JSON.stringify(updated));
       localStorage.setItem('duo_global_progress', JSON.stringify(updated));
       localStorage.setItem('duo_active_course_id', courseId.toString());
+
+      const allCourseIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      for (const cid of allCourseIds) {
+        localStorage.setItem(`${STORAGE_PREFIX}${cid}`, JSON.stringify({ ...updated, courseId: cid }));
+      }
+
       window.dispatchEvent(new CustomEvent('duo_progress_updated', { detail: updated }));
     } catch (e) {
       console.error('Failed to jump to unit:', e);
