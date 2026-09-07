@@ -17,6 +17,16 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: 'Duolingo — The world’s best way to learn a language',
   description: 'Practice languages with fun, bite-sized lessons in an authentic Duolingo clone featuring 11 courses, 5 exercise types, streak tracking, hearts, and leaderboards.',
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
