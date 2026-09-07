@@ -135,14 +135,8 @@ export default function LearnPage() {
     progressManager.getCourseProgress(currentCourseId)
   );
 
-  // Active Skill Popover (defaults to current active level so learner immediately sees next lesson)
-  const [activePopoverLevel, setActivePopoverLevel] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const p = progressManager.getCourseProgress(currentCourseId);
-      return p.currentLevel || 1;
-    }
-    return 1;
-  });
+  // Active Skill Popover (defaults to null; opens cleanly only when user clicks a node)
+  const [activePopoverLevel, setActivePopoverLevel] = useState<number | null>(null);
 
   // Milestone Chest Reward Modal State
   const [chestModal, setChestModal] = useState<{
@@ -195,12 +189,10 @@ export default function LearnPage() {
     }
 
     setProgress(p);
-    setActivePopoverLevel(p.currentLevel || 1);
 
     const handleProgressUpdate = () => {
       const latest = progressManager.getCourseProgress(currentCourseId);
       setProgress(latest);
-      setActivePopoverLevel(latest.currentLevel || 1);
     };
 
     window.addEventListener('duo_progress_updated', handleProgressUpdate);
@@ -228,7 +220,6 @@ export default function LearnPage() {
             if (currentProg.currentLevel <= backendLessonsCompleted) {
               const updated = progressManager.completeLevel(currentCourseId, backendLessonsCompleted);
               setProgress(updated);
-              setActivePopoverLevel(updated.currentLevel || 1);
             }
           }
         }
@@ -382,11 +373,11 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="duo-skill-node relative flex flex-col items-center z-20 mb-8 cursor-pointer group"
+                      className={`duo-skill-node relative flex flex-col items-center mb-12 cursor-pointer group ${isPopoverOpen ? 'z-50' : 'z-20'}`}
                       style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                       onClick={() => handleChestClick(node.level, unit.unitNumber)}
                     >
-                      {isActive && <OpenPill />}
+                      {isActive && activePopoverLevel === null && <OpenPill />}
 
                       <div className="w-[84px] h-[70px] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform relative">
                         <DuolingoChestIcon
@@ -408,7 +399,7 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="duo-skill-node relative flex flex-col items-center z-30 mb-8 cursor-pointer group"
+                      className={`duo-skill-node relative flex flex-col items-center mb-12 cursor-pointer group ${isPopoverOpen ? 'z-50' : 'z-30'}`}
                       style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                       onClick={() =>
                         setJumpModal({
@@ -419,7 +410,7 @@ export default function LearnPage() {
                         })
                       }
                     >
-                      <JumpPill />
+                      {activePopoverLevel === null && <JumpPill />}
                       <div
                         className="w-[74px] h-[74px] rounded-full border-b-[6px] hover:brightness-105 active:translate-y-0.5 flex items-center justify-center shadow-lg transition-transform"
                         style={{
@@ -438,7 +429,7 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="duo-skill-node relative flex flex-col items-center z-30 mb-8"
+                      className={`duo-skill-node relative flex flex-col items-center mb-12 ${isPopoverOpen ? 'z-50' : 'z-30'}`}
                       style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                     >
                       {isPopoverOpen && (
@@ -449,11 +440,12 @@ export default function LearnPage() {
                           isCompleted={false}
                           lessonId={node.level}
                           courseId={currentCourseId}
+                          colorTheme={unit.colorTheme}
                           onClose={() => setActivePopoverLevel(null)}
                         />
                       )}
 
-                      {!isPopoverOpen && <StartPill />}
+                      {!isPopoverOpen && activePopoverLevel === null && <StartPill />}
 
                       <div
                         className="relative cursor-pointer group"
@@ -490,7 +482,7 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="duo-skill-node relative flex flex-col items-center z-20 mb-8 cursor-pointer group"
+                      className={`duo-skill-node relative flex flex-col items-center mb-12 cursor-pointer group ${isPopoverOpen ? 'z-50' : 'z-20'}`}
                       style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                       onClick={() =>
                         setActivePopoverLevel((prev) => (prev === node.level ? null : node.level))
@@ -504,6 +496,7 @@ export default function LearnPage() {
                           isCompleted={true}
                           lessonId={node.level}
                           courseId={currentCourseId}
+                          colorTheme={unit.colorTheme}
                           onClose={() => setActivePopoverLevel(null)}
                         />
                       )}
@@ -525,7 +518,7 @@ export default function LearnPage() {
                 return (
                   <div
                     key={node.level}
-                    className="duo-skill-node relative flex flex-col items-center z-10 mb-8 cursor-pointer"
+                    className={`duo-skill-node relative flex flex-col items-center mb-12 cursor-pointer ${isPopoverOpen ? 'z-50' : 'z-10'}`}
                     style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                     onClick={() => handleLockedClick(node.title)}
                   >

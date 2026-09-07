@@ -10,6 +10,7 @@ interface SkillPopoverProps {
   isCompleted?: boolean;
   lessonId: number | null;
   courseId?: number;
+  colorTheme?: string;
   onClose: () => void;
 }
 
@@ -56,57 +57,71 @@ export const SkillPopover: React.FC<SkillPopoverProps> = ({
   isCompleted = false,
   lessonId,
   courseId,
+  colorTheme = '#58cc02',
   onClose,
 }) => {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
         onClose();
       }
     };
-    const timer = setTimeout(() => {
-      document.addEventListener('click', handleClickOutside);
-    }, 50);
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener('click', handleClickOutside);
-    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
   return (
-    <div
-      ref={popoverRef}
-      className="absolute left-1/2 -translate-x-1/2 top-[84px] z-40 w-[295px] sm:w-[325px] select-none animate-in fade-in zoom-in-95 duration-150"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Upward-pointing triangle caret touching the bottom of the star node */}
-      <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[11px] border-l-transparent border-r-[11px] border-r-transparent border-b-[11px] border-b-[#58cc02]" />
+    <>
+      {/* Invisible fixed backdrop to dismiss popover when clicking anywhere else */}
+      <div
+        className="fixed inset-0 z-40 bg-transparent cursor-default"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+      />
 
-      {/* Main Vibrant Green Card Container matching screenshot */}
-      <div className="w-full rounded-[24px] bg-[#58cc02] p-5 shadow-2xl relative text-left">
-        {/* Lesson Title */}
-        <h4 className="text-[20px] font-black text-white leading-tight tracking-tight">
-          {title || 'Order at a café'}
-        </h4>
+      <div
+        ref={popoverRef}
+        className="absolute left-1/2 -translate-x-1/2 top-[84px] z-50 w-[295px] sm:w-[325px] select-none animate-in fade-in zoom-in-95 duration-150"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Upward-pointing triangle caret touching the bottom of the star node */}
+        <div
+          className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[11px] border-l-transparent border-r-[11px] border-r-transparent border-b-[11px]"
+          style={{ borderBottomColor: colorTheme }}
+        />
 
-        {/* Level Status Subtitle */}
-        <p className="text-[14px] font-bold text-white mt-1.5 mb-5">
-          Level {lessonId || 1} • {isCompleted ? 'Completed ✓' : 'Ready to Start'}
-        </p>
-
-        {/* Elongated Pill 3D White Button with Green Text */}
-        <Link
-          href={`/lesson/${lessonId || 1}${courseId ? `?course_id=${courseId}` : ''}`}
-          className="w-full h-[52px] rounded-2xl bg-white hover:bg-[#f7f7f7] border-b-[4px] border-[#e5e5e5] active:border-b-0 active:translate-y-1 text-[#58cc02] font-black text-[15px] uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center justify-center no-underline select-none"
+        {/* Main Card Container */}
+        <div
+          className="w-full rounded-[24px] p-5 shadow-2xl relative text-left"
+          style={{ backgroundColor: colorTheme }}
         >
-          {isCompleted ? 'PRACTICE +5 XP' : 'START +10 XP'}
-        </Link>
+          {/* Lesson Title */}
+          <h4 className="text-[20px] font-black text-white leading-tight tracking-tight">
+            {title || 'Order at a café'}
+          </h4>
 
-        {/* Peeking Duo Owl on the right corner */}
-        <PeekingDuo />
+          {/* Level Status Subtitle */}
+          <p className="text-[14px] font-bold text-white mt-1.5 mb-5">
+            Level {lessonId || 1} • {isCompleted ? 'Completed ✓' : 'Ready to Start'}
+          </p>
+
+          {/* Elongated Pill 3D White Button with Theme Color Text */}
+          <Link
+            href={`/lesson/${lessonId || 1}${courseId ? `?course_id=${courseId}` : ''}`}
+            className="w-full h-[52px] rounded-2xl bg-white hover:bg-[#f7f7f7] border-b-[4px] border-[#e5e5e5] active:border-b-0 active:translate-y-1 font-black text-[15px] uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center justify-center no-underline select-none"
+            style={{ color: colorTheme }}
+          >
+            {isCompleted ? 'PRACTICE +5 XP' : 'START +10 XP'}
+          </Link>
+
+          {/* Peeking Duo Owl on the right corner */}
+          <PeekingDuo />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
