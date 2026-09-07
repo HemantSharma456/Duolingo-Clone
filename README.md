@@ -1,8 +1,3 @@
-# Duolingo Full-Stack Web Application Clone
-> **Scaler AI Labs Full-Stack SDE Assignment Submission**  
-> Built with **Next.js 16 (TypeScript, React 19, Turbopack)**, **Python FastAPI**, **SQLAlchemy ORM**, and **SQLite**.
-
----
 
 ## 🌟 Executive Summary
 
