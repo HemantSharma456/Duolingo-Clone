@@ -7,22 +7,22 @@ export const PathRightRail: React.FC = () => {
   return (
     <aside className="duo-path-aside flex flex-col gap-4">
       {/* Card 1: Try Super for free */}
-      <div className="w-full rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] p-5 flex flex-col gap-3 shadow-none relative overflow-hidden">
+      <div className="w-full rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-5 flex flex-col gap-3 shadow-none relative overflow-hidden">
         <div className="flex items-start justify-between">
           <div>
             {/* Super tag */}
             <div className="inline-block px-2 py-0.5 rounded-md bg-gradient-to-r from-[#ce82ff] via-[#1cb0f6] to-[#58cc02] p-[1.5px] mb-2.5">
-              <div className="px-2 py-0.5 rounded-[4px] bg-[#131f24]">
+              <div className="px-2 py-0.5 rounded-[4px] bg-[var(--bg-surface)]">
                 <span className="text-[11px] font-black italic tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#ce82ff] via-[#1cb0f6] to-[#58cc02]">
                   SUPER
                 </span>
               </div>
             </div>
 
-            <h3 className="font-black text-base text-white leading-tight">
+            <h3 className="font-black text-base text-[var(--text-primary)] leading-tight">
               Try Super for free
             </h3>
-            <p className="text-xs font-semibold text-[#8e9ca5] mt-1.5 leading-relaxed max-w-[190px]">
+            <p className="text-xs font-semibold text-[var(--text-secondary)] mt-1.5 leading-relaxed max-w-[190px]">
               No ads, personalized practice, and unlimited Legendary!
             </p>
           </div>
@@ -52,8 +52,8 @@ export const PathRightRail: React.FC = () => {
       </div>
 
       {/* Card 2: Unlock Leaderboards! */}
-      <div className="w-full rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] p-5 flex flex-col gap-3 shadow-none">
-        <h3 className="font-black text-base text-white">
+      <div className="w-full rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-5 flex flex-col gap-3 shadow-none">
+        <h3 className="font-black text-base text-[var(--text-primary)]">
           Unlock Leaderboards!
         </h3>
         <div className="flex items-center gap-4">
@@ -69,16 +69,16 @@ export const PathRightRail: React.FC = () => {
               <path d="M20 22H24V28H20V22Z" fill="#1b2830" />
             </svg>
           </div>
-          <p className="text-sm font-semibold text-[#8e9ca5] leading-snug">
+          <p className="text-sm font-semibold text-[var(--text-secondary)] leading-snug">
             Complete 2 more lessons to start competing
           </p>
         </div>
       </div>
 
       {/* Card 3: Daily Quests */}
-      <div className="w-full rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] p-5 flex flex-col gap-3 shadow-none">
+      <div className="w-full rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-5 flex flex-col gap-3 shadow-none">
         <div className="flex items-center justify-between">
-          <h3 className="font-black text-base text-white">
+          <h3 className="font-black text-base text-[var(--text-primary)]">
             Daily Quests
           </h3>
           <Link
@@ -92,11 +92,11 @@ export const PathRightRail: React.FC = () => {
         <div className="flex items-center gap-4">
           <span className="text-3xl text-[#ffc800] shrink-0 select-none">⚡</span>
           <div className="flex-1">
-            <div className="font-black text-sm text-white mb-1.5">
+            <div className="font-black text-sm text-[var(--text-primary)] mb-1.5">
               Earn 10 XP
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-3.5 rounded-full bg-[#23333d] overflow-hidden relative flex items-center justify-center">
+              <div className="flex-1 h-3.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-color)] overflow-hidden relative flex items-center justify-center">
                 <div
                   className="absolute inset-0 bg-[#ffc800] rounded-full"
                   style={{ width: '100%' }}
@@ -119,7 +119,7 @@ export const PathRightRail: React.FC = () => {
       </div>
 
       {/* Card 4: Using an ad blocker? matching Screenshot 2 & 3 */}
-      <div className="w-full rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] overflow-hidden flex flex-col shadow-none">
+      <div className="w-full rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] overflow-hidden flex flex-col shadow-none">
         {/* Banner with Gradient & Peeking Neon Super Duo */}
         <div className="w-full h-32 bg-gradient-to-b from-[#164e63] via-[#0e3b4a] to-[#131f24] flex items-center justify-center relative select-none">
           <svg width="110" height="90" viewBox="0 0 110 90" fill="none">
@@ -148,16 +148,16 @@ export const PathRightRail: React.FC = () => {
           </svg>
         </div>
 
-        <div className="p-5 pt-1 text-center flex flex-col items-center">
-          <h3 className="font-black text-lg text-white mb-2 leading-snug">
+        <div className="p-5 pt-2 text-center flex flex-col items-center">
+          <h3 className="font-black text-lg text-[var(--text-primary)] mb-2 leading-snug">
             Using an ad blocker?
           </h3>
-          <p className="text-xs font-semibold text-[#8e9ca5] leading-relaxed mb-5">
+          <p className="text-xs font-semibold text-[var(--text-secondary)] leading-relaxed mb-5">
             Support education with Super Duolingo and we&apos;ll remove ads for you
           </p>
 
           <div className="w-full flex flex-col gap-2.5">
-            {/* TRY SUPER FOR FREE (White 3D Button) */}
+            {/* TRY SUPER FOR FREE (White / Light 3D Button) */}
             <button
               type="button"
               className="w-full h-11 rounded-2xl bg-white hover:bg-[#e5e5e5] border-b-4 border-[#cbd5e1] active:border-b-0 active:translate-y-1 text-[#131f24] font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm"
@@ -165,10 +165,10 @@ export const PathRightRail: React.FC = () => {
               TRY SUPER FOR FREE
             </button>
 
-            {/* DISABLE AD BLOCKER (Dark Pill Button) */}
+            {/* DISABLE AD BLOCKER (Surface Pill Button) */}
             <button
               type="button"
-              className="w-full h-11 rounded-2xl bg-[#1b272f] hover:bg-[#24333d] border-b-4 border-[#121c22] active:border-b-0 active:translate-y-1 text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+              className="w-full h-11 rounded-2xl bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] border-b-4 border-[var(--border-color)] active:border-b-0 active:translate-y-1 text-[var(--text-primary)] font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm"
             >
               DISABLE AD BLOCKER
             </button>
@@ -178,23 +178,23 @@ export const PathRightRail: React.FC = () => {
 
       {/* Footer Navigation Links */}
       <footer className="pt-2 pb-6 text-center select-none">
-        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] font-extrabold text-[#607482] uppercase tracking-wider">
-          <span className="hover:text-white cursor-pointer">ABOUT</span>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">ABOUT</span>
           <span>•</span>
-          <span className="hover:text-white cursor-pointer">BLOG</span>
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">BLOG</span>
           <span>•</span>
-          <span className="hover:text-white cursor-pointer">STORE</span>
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">STORE</span>
           <span>•</span>
-          <span className="hover:text-white cursor-pointer">EFFICACY</span>
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">EFFICACY</span>
           <span>•</span>
-          <span className="hover:text-white cursor-pointer">CAREERS</span>
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">CAREERS</span>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] font-extrabold text-[#607482] uppercase tracking-wider mt-2">
-          <span className="hover:text-white cursor-pointer">INVESTORS</span>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider mt-2">
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">INVESTORS</span>
           <span>•</span>
-          <span className="hover:text-white cursor-pointer">TERMS</span>
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">TERMS</span>
           <span>•</span>
-          <span className="hover:text-white cursor-pointer">PRIVACY</span>
+          <span className="hover:text-[var(--text-primary)] cursor-pointer">PRIVACY</span>
         </div>
       </footer>
     </aside>

@@ -46,7 +46,7 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({ progress, hearts }) 
           onClick={() => setQuitModalOpen(false)}
         >
           <div
-            className="w-full max-w-[420px] rounded-[32px] bg-[#131f24] p-8 sm:p-10 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-150 select-none"
+            className="w-full max-w-[420px] rounded-[32px] bg-[var(--bg-surface)] border-2 border-[var(--border-color)] p-8 sm:p-10 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-150 select-none"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Crying Duo Mascot Illustration */}
@@ -62,7 +62,7 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({ progress, hearts }) 
             </div>
 
             {/* Prompt Heading */}
-            <h3 className="text-[22px] sm:text-2xl font-black text-white leading-tight mb-8 max-w-[340px]">
+            <h3 className="text-[22px] sm:text-2xl font-black text-[var(--text-primary)] leading-tight mb-8 max-w-[340px]">
               Wait, don&apos;t go! You&apos;ll lose your progress if you quit now
             </h3>
 
@@ -71,7 +71,7 @@ export const LessonHeader: React.FC<LessonHeaderProps> = ({ progress, hearts }) 
               <button
                 type="button"
                 onClick={() => setQuitModalOpen(false)}
-                className="w-full h-12 rounded-2xl bg-[#49c0f8] hover:bg-[#5dd0ff] active:translate-y-0.5 border-b-4 border-[#1899d6] active:border-b-0 text-[#131f24] font-black text-sm uppercase tracking-wider transition-all cursor-pointer shadow-md mb-3"
+                className="w-full h-12 rounded-2xl bg-[#49c0f8] hover:bg-[#5dd0ff] active:translate-y-0.5 border-b-4 border-[#1899d6] active:border-b-0 text-white font-black text-sm uppercase tracking-wider transition-all cursor-pointer shadow-md mb-3"
               >
                 KEEP LEARNING
               </button>

@@ -73,7 +73,7 @@ export default function CoursesPage() {
     <div className="w-full max-w-[1080px] mx-auto pt-2 pb-20 select-none">
       {/* Top Header Row: Courses for English Speakers & I SPEAK ENGLISH */}
       <div className="flex items-center justify-between gap-4 pb-4">
-        <h1 className="text-2xl sm:text-[28px] font-black text-white tracking-tight">
+        <h1 className="text-2xl sm:text-[28px] font-black text-[var(--text-primary)] tracking-tight">
           Courses for English Speakers
         </h1>
 
@@ -82,7 +82,7 @@ export default function CoursesPage() {
           <button
             type="button"
             onClick={() => setSpeakerDropdownOpen(!speakerDropdownOpen)}
-            className="text-xs font-black text-[#8599a3] hover:text-white uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors bg-transparent border-none py-1.5 px-2 rounded-lg hover:bg-[#202f36]"
+            className="text-xs font-black text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors bg-transparent border-none py-1.5 px-2 rounded-lg hover:bg-[var(--bg-subtle)]"
           >
             <span>I SPEAK ENGLISH</span>
             <svg
@@ -101,13 +101,13 @@ export default function CoursesPage() {
           </button>
 
           {speakerDropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border-2 border-[#37464f] bg-[#18282f] shadow-2xl z-50 py-1 overflow-hidden animate-scaleIn">
+            <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] shadow-2xl z-50 py-1 overflow-hidden animate-scaleIn">
               {['English', 'Español', 'Français', 'Deutsch', 'Italiano'].map((lang) => (
                 <button
                   key={lang}
                   type="button"
                   onClick={() => setSpeakerDropdownOpen(false)}
-                  className="w-full text-left px-4 py-2.5 text-xs font-bold text-white hover:bg-[#202f36] transition-colors cursor-pointer"
+                  className="w-full text-left px-4 py-2.5 text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer"
                 >
                   {lang}
                 </button>
@@ -129,8 +129,8 @@ export default function CoursesPage() {
               onClick={() => handleSelectCourse(course.id)}
               className={`rounded-2xl border-2 transition-all p-6 flex flex-col items-center justify-center text-center cursor-pointer min-h-[178px] relative group active:translate-y-0.5 ${
                 isCurrent
-                  ? 'border-[#37464f] bg-[#131f24] hover:bg-[#18282f]'
-                  : 'border-[#2b3b44] bg-[#131f24] hover:bg-[#18282f] hover:border-[#4b5e68]'
+                  ? 'border-[#58cc02] bg-[var(--bg-surface)] shadow-sm'
+                  : 'border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] hover:border-[#8599a3]'
               } ${isLoading ? 'opacity-70 animate-pulse' : ''}`}
             >
               {/* Green checkmark badge in top-right corner if enrolled / active course */}
@@ -160,13 +160,13 @@ export default function CoursesPage() {
               </div>
 
               {/* Course Title */}
-              <span className="text-base font-black text-white mt-3.5 leading-tight">
+              <span className="text-base font-black text-[var(--text-primary)] mt-3.5 leading-tight">
                 {course.title}
               </span>
 
               {/* Subtitle / Learner count */}
               {course.learner_count ? (
-                <span className="text-xs font-bold text-[#8599a3] mt-1.5 leading-none">
+                <span className="text-xs font-bold text-[var(--text-secondary)] mt-1.5 leading-none">
                   {course.learner_count}
                 </span>
               ) : (

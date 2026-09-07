@@ -35,7 +35,7 @@ export const JumpModal: React.FC<JumpModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm rounded-3xl bg-[#131f24] border-2 border-[#2b3a42] p-6 shadow-2xl relative text-center select-none"
+        className="w-full max-w-sm rounded-3xl bg-[var(--bg-surface)] border-2 border-[var(--border-color)] p-6 shadow-2xl relative text-center select-none"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Fast-forward Icon Badge */}
@@ -48,11 +48,11 @@ export const JumpModal: React.FC<JumpModalProps> = ({
           </svg>
         </div>
 
-        <h3 className="text-xl font-black text-white mb-2">
+        <h3 className="text-xl font-black text-[var(--text-primary)] mb-2">
           Jump to Unit {unitNumber}?
         </h3>
-        <p className="text-sm font-semibold text-[#8e9ca5] mb-6">
-          Pass the test to jump ahead to <strong className="text-white font-extrabold">{title}</strong>.
+        <p className="text-sm font-semibold text-[var(--text-secondary)] mb-6">
+          Pass the test to jump ahead to <strong className="text-[var(--text-primary)] font-extrabold">{title}</strong>.
         </p>
 
         <div className="flex flex-col gap-3">
@@ -69,7 +69,7 @@ export const JumpModal: React.FC<JumpModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full h-11 rounded-2xl bg-[#1f2e35] hover:bg-[#283b44] text-[#8e9ca5] hover:text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer"
+            className="w-full h-11 rounded-2xl bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-black text-xs uppercase tracking-wider transition-colors cursor-pointer"
           >
             MAYBE LATER
           </button>

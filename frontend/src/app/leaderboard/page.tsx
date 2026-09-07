@@ -106,7 +106,7 @@ export default function LeaderboardPage() {
     <div className="duo-leaderboard-container select-none pb-24">
       {/* Offline Status Badge if backend is recovering */}
       {isOfflineFallback && (
-        <div className="w-full bg-[#202f38] border border-[#2b3e48] text-[#8e9ca5] px-4 py-2 rounded-2xl flex items-center justify-between text-xs font-bold">
+        <div className="w-full bg-[var(--bg-subtle)] border border-[var(--border-color)] text-[var(--text-secondary)] px-4 py-2 rounded-2xl flex items-center justify-between text-xs font-bold">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#ffc800] animate-pulse" />
             <span>Cached Standings Mode</span>
@@ -157,7 +157,7 @@ export default function LeaderboardPage() {
                       ? 'bg-[var(--duo-blue)] text-white shadow-xs'
                       : isTop3
                       ? 'bg-[var(--duo-yellow)] text-white'
-                      : 'bg-[#24343d] text-[var(--text-secondary)]'
+                      : 'bg-[var(--bg-subtle)] text-[var(--text-secondary)]'
                   }`}
                 >
                   {entry.username.charAt(0).toUpperCase()}
@@ -165,7 +165,7 @@ export default function LeaderboardPage() {
 
                 <div>
                   <div className="text-base font-extrabold flex items-center gap-2">
-                    <span className={entry.is_current_user ? 'text-[#1cb0f6]' : 'text-white'}>
+                    <span className={entry.is_current_user ? 'text-[#1cb0f6]' : 'text-[var(--text-primary)]'}>
                       {entry.username}
                     </span>
                     {entry.is_current_user && (

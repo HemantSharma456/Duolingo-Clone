@@ -49,7 +49,7 @@ export const ChestRewardModal: React.FC<ChestRewardModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm rounded-[32px] bg-[#131f24] border-2 border-[#2b3a42] p-7 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-150 select-none"
+        className="w-full max-w-sm rounded-[32px] bg-[var(--bg-surface)] border-2 border-[var(--border-color)] p-7 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-150 select-none"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Chest Illustration */}
@@ -64,10 +64,10 @@ export const ChestRewardModal: React.FC<ChestRewardModalProps> = ({
           />
         </div>
 
-        <h3 className="text-2xl font-black text-white leading-tight mb-2">
+        <h3 className="text-2xl font-black text-[var(--text-primary)] leading-tight mb-2">
           {isAlreadyClaimed ? 'Chest Opened!' : 'Milestone Reward!'}
         </h3>
-        <p className="text-sm font-semibold text-[#8e9ca5] mb-6 max-w-[280px]">
+        <p className="text-sm font-semibold text-[var(--text-secondary)] mb-6 max-w-[280px]">
           {isAlreadyClaimed
             ? `You already claimed the Unit ${unitNumber} Milestone Chest.`
             : `Congratulations! You unlocked the Unit ${unitNumber} Milestone Chest!`}
@@ -75,12 +75,12 @@ export const ChestRewardModal: React.FC<ChestRewardModalProps> = ({
 
         {/* Rewards Box */}
         {!isAlreadyClaimed && (
-          <div className="flex items-center justify-center gap-4 w-full bg-[#1c2a32] border border-[#2e3f49] rounded-2xl p-4 mb-6">
+          <div className="flex items-center justify-center gap-4 w-full bg-[var(--bg-subtle)] border border-[var(--border-color)] rounded-2xl p-4 mb-6">
             <div className="flex items-center gap-2">
               <span className="text-2xl">💎</span>
               <span className="font-black text-lg text-[#1cb0f6]">+20 Gems</span>
             </div>
-            <div className="w-[1px] h-6 bg-[#2e3f49]" />
+            <div className="w-[1px] h-6 bg-[var(--border-color)]" />
             <div className="flex items-center gap-2">
               <span className="text-2xl">⚡</span>
               <span className="font-black text-lg text-[#ffc800]">+10 XP</span>
@@ -93,7 +93,7 @@ export const ChestRewardModal: React.FC<ChestRewardModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full h-12 rounded-2xl bg-[#1f2e35] hover:bg-[#283b44] text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer"
+            className="w-full h-12 rounded-2xl bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] text-[var(--text-primary)] font-black text-xs uppercase tracking-wider transition-colors cursor-pointer"
           >
             CLOSE
           </button>

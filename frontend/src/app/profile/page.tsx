@@ -55,7 +55,8 @@ const PencilEditIcon = () => (
     height="17"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="white"
+    stroke="currentColor"
+    className="text-[var(--text-primary)]"
     strokeWidth="2.5"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -210,7 +211,7 @@ export default function ProfilePage() {
             =================================================================== */}
         <div className="flex flex-col gap-8 w-full min-w-0">
           {/* 1. Hero Avatar Card */}
-          <div className="relative w-full h-[250px] sm:h-[280px] rounded-3xl border-2 border-[#2b3b44] bg-[#18252d]/60 flex items-center justify-center overflow-hidden">
+          <div className="relative w-full h-[250px] sm:h-[280px] rounded-3xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] flex items-center justify-center overflow-hidden">
             {/* Centered Avatar Silhouette with Curly Hair, Dashed Cyan Outline & Plus */}
             <div className="transform translate-y-3">
               <AvatarSilhouette />
@@ -220,7 +221,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => triggerToast('Avatar editor opening soon!')}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#131f24] hover:bg-[#1f2f38] border border-[#2b3b44] flex items-center justify-center cursor-pointer transition-all shadow-md active:scale-95"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] border border-[var(--border-color)] flex items-center justify-center cursor-pointer transition-all shadow-md active:scale-95"
               aria-label="Edit Profile Avatar"
             >
               <PencilEditIcon />
@@ -230,13 +231,13 @@ export default function ProfilePage() {
           {/* 2. User Details & Enrolled Language Flags */}
           <div className="flex items-start justify-between gap-4 -mt-2">
             <div>
-              <h1 className="text-2xl sm:text-[28px] font-black text-white leading-tight">
+              <h1 className="text-2xl sm:text-[28px] font-black text-[var(--text-primary)] leading-tight">
                 {displayName}
               </h1>
-              <p className="text-sm font-bold text-[#778e9b] mt-0.5">
+              <p className="text-sm font-bold text-[var(--text-secondary)] mt-0.5">
                 {handleName}
               </p>
-              <p className="text-sm font-bold text-[#778e9b] mt-1.5">
+              <p className="text-sm font-bold text-[var(--text-secondary)] mt-1.5">
                 {joinedDate}
               </p>
               <div className="flex items-center gap-4 mt-2">
@@ -261,13 +262,13 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2 pt-1">
               <div
                 title="French Course"
-                className="rounded-lg overflow-hidden border border-[#2b3b44] shadow-xs cursor-pointer hover:scale-105 transition-transform"
+                className="rounded-lg overflow-hidden border border-[var(--border-color)] shadow-xs cursor-pointer hover:scale-105 transition-transform"
               >
                 <FlagIcon code="fr" width={32} height={23} />
               </div>
               <div
                 title="Spanish Course"
-                className="rounded-lg overflow-hidden border border-[#2b3b44] shadow-xs cursor-pointer hover:scale-105 transition-transform"
+                className="rounded-lg overflow-hidden border border-[var(--border-color)] shadow-xs cursor-pointer hover:scale-105 transition-transform"
               >
                 <FlagIcon code="es" width={32} height={23} />
               </div>
@@ -276,45 +277,45 @@ export default function ProfilePage() {
 
           {/* 3. Statistics Section (2x2 Grid) */}
           <div>
-            <h2 className="text-xl font-black text-white mb-3">Statistics</h2>
+            <h2 className="text-xl font-black text-[var(--text-primary)] mb-3">Statistics</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Day Streak */}
-              <div className="p-4 rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 flex items-center gap-4 hover:border-[#384b56] transition-colors">
+              <div className="p-4 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] flex items-center gap-4 hover:border-[#384b56] transition-colors">
                 <FlameIcon />
                 <div>
-                  <div className="text-xl font-black text-white leading-tight">
+                  <div className="text-xl font-black text-[var(--text-primary)] leading-tight">
                     {streakCount}
                   </div>
-                  <div className="text-sm font-bold text-[#778e9b]">Day streak</div>
+                  <div className="text-sm font-bold text-[var(--text-secondary)]">Day streak</div>
                 </div>
               </div>
 
               {/* Total XP */}
-              <div className="p-4 rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 flex items-center gap-4 hover:border-[#384b56] transition-colors">
+              <div className="p-4 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] flex items-center gap-4 hover:border-[#384b56] transition-colors">
                 <LightningIcon />
                 <div>
-                  <div className="text-xl font-black text-white leading-tight">
+                  <div className="text-xl font-black text-[var(--text-primary)] leading-tight">
                     {xpCount}
                   </div>
-                  <div className="text-sm font-bold text-[#778e9b]">Total XP</div>
+                  <div className="text-sm font-bold text-[var(--text-secondary)]">Total XP</div>
                 </div>
               </div>
 
               {/* Current League */}
-              <div className="p-4 rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 flex items-center gap-4 hover:border-[#384b56] transition-colors">
+              <div className="p-4 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] flex items-center gap-4 hover:border-[#384b56] transition-colors">
                 <ShieldIcon />
                 <div>
-                  <div className="text-xl font-black text-white leading-tight">None</div>
-                  <div className="text-sm font-bold text-[#778e9b]">Current league</div>
+                  <div className="text-xl font-black text-[var(--text-primary)] leading-tight">None</div>
+                  <div className="text-sm font-bold text-[var(--text-secondary)]">Current league</div>
                 </div>
               </div>
 
               {/* Top 3 Finishes */}
-              <div className="p-4 rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 flex items-center gap-4 hover:border-[#384b56] transition-colors">
+              <div className="p-4 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] flex items-center gap-4 hover:border-[#384b56] transition-colors">
                 <MedalIcon />
                 <div>
-                  <div className="text-xl font-black text-white leading-tight">0</div>
-                  <div className="text-sm font-bold text-[#778e9b]">Top 3 finishes</div>
+                  <div className="text-xl font-black text-[var(--text-primary)] leading-tight">0</div>
+                  <div className="text-sm font-bold text-[var(--text-secondary)]">Top 3 finishes</div>
                 </div>
               </div>
             </div>
@@ -323,7 +324,7 @@ export default function ProfilePage() {
           {/* 4. Achievements Section (Stacked Cards matching Image 2) */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-black text-white">Achievements</h2>
+              <h2 className="text-xl font-black text-[var(--text-primary)]">Achievements</h2>
               <button
                 type="button"
                 onClick={() => setShowViewAllModal(true)}
@@ -333,7 +334,7 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            <div className="rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 divide-y-2 divide-[#2b3b44] overflow-hidden">
+            <div className="rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] divide-y-2 divide-[var(--border-color)] overflow-hidden">
               {/* Row 1: Wildfire */}
               <div className="p-4 sm:p-5 flex items-center gap-4 sm:gap-5">
                 {/* Badge Icon */}
@@ -351,16 +352,16 @@ export default function ProfilePage() {
                 {/* Info & Progress */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-black text-base text-white truncate">Wildfire</h3>
-                    <span className="text-xs sm:text-sm font-black text-[#778e9b] shrink-0">1/3</span>
+                    <h3 className="font-black text-base text-[var(--text-primary)] truncate">Wildfire</h3>
+                    <span className="text-xs sm:text-sm font-black text-[var(--text-secondary)] shrink-0">1/3</span>
                   </div>
-                  <div className="w-full h-3.5 bg-[#2a3a44] rounded-full mt-2 overflow-hidden">
+                  <div className="w-full h-3.5 bg-[var(--bg-subtle)] border border-[var(--border-color)] rounded-full mt-2 overflow-hidden">
                     <div
                       className="h-full bg-[#ffc800] rounded-full transition-all duration-500"
                       style={{ width: '33.3%' }}
                     />
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-[#778e9b] mt-1.5 truncate">
+                  <p className="text-xs sm:text-sm font-bold text-[var(--text-secondary)] mt-1.5 truncate">
                     Reach a 3 day streak
                   </p>
                 </div>
@@ -383,16 +384,16 @@ export default function ProfilePage() {
                 {/* Info & Progress */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-black text-base text-white truncate">Sage</h3>
-                    <span className="text-xs sm:text-sm font-black text-[#778e9b] shrink-0">14/100</span>
+                    <h3 className="font-black text-base text-[var(--text-primary)] truncate">Sage</h3>
+                    <span className="text-xs sm:text-sm font-black text-[var(--text-secondary)] shrink-0">14/100</span>
                   </div>
-                  <div className="w-full h-3.5 bg-[#2a3a44] rounded-full mt-2 overflow-hidden">
+                  <div className="w-full h-3.5 bg-[var(--bg-subtle)] border border-[var(--border-color)] rounded-full mt-2 overflow-hidden">
                     <div
                       className="h-full bg-[#ffc800] rounded-full transition-all duration-500"
                       style={{ width: '14%' }}
                     />
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-[#778e9b] mt-1.5 truncate">
+                  <p className="text-xs sm:text-sm font-bold text-[var(--text-secondary)] mt-1.5 truncate">
                     Earn 100 XP
                   </p>
                 </div>
@@ -415,16 +416,16 @@ export default function ProfilePage() {
                 {/* Info & Progress */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-black text-base text-white truncate">Scholar</h3>
-                    <span className="text-xs sm:text-sm font-black text-[#778e9b] shrink-0">0/1</span>
+                    <h3 className="font-black text-base text-[var(--text-primary)] truncate">Scholar</h3>
+                    <span className="text-xs sm:text-sm font-black text-[var(--text-secondary)] shrink-0">0/1</span>
                   </div>
-                  <div className="w-full h-3.5 bg-[#2a3a44] rounded-full mt-2 overflow-hidden">
+                  <div className="w-full h-3.5 bg-[var(--bg-subtle)] border border-[var(--border-color)] rounded-full mt-2 overflow-hidden">
                     <div
                       className="h-full bg-[#ffc800] rounded-full transition-all duration-500"
                       style={{ width: '0%' }}
                     />
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-[#778e9b] mt-1.5 truncate">
+                  <p className="text-xs sm:text-sm font-bold text-[var(--text-secondary)] mt-1.5 truncate">
                     Unlock Leaderboards by completing 10 lessons
                   </p>
                 </div>
@@ -438,16 +439,16 @@ export default function ProfilePage() {
             =================================================================== */}
         <div className="flex flex-col gap-6 w-full sticky top-24">
           {/* 1. Friends / Followers Tabbed Card */}
-          <div className="rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 overflow-hidden">
+          <div className="rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] overflow-hidden">
             {/* Tabs Header */}
-            <div className="flex border-b border-[#2b3b44]">
+            <div className="flex border-b border-[var(--border-color)]">
               <button
                 type="button"
                 onClick={() => setActiveTab('following')}
                 className={`flex-1 py-3.5 text-center font-black text-xs sm:text-sm tracking-wider uppercase relative transition-colors cursor-pointer ${
                   activeTab === 'following'
                     ? 'text-[#1cb0f6]'
-                    : 'text-[#778e9b] hover:text-white'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 FOLLOWING
@@ -462,7 +463,7 @@ export default function ProfilePage() {
                 className={`flex-1 py-3.5 text-center font-black text-xs sm:text-sm tracking-wider uppercase relative transition-colors cursor-pointer ${
                   activeTab === 'followers'
                     ? 'text-[#1cb0f6]'
-                    : 'text-[#778e9b] hover:text-white'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 FOLLOWERS
@@ -477,25 +478,25 @@ export default function ProfilePage() {
               {/* Duolingo Friends Cast Illustration */}
               <DuolingoFriendsIllustration />
 
-              <p className="text-sm font-bold text-[#d4e1e8] text-center max-w-[260px] mx-auto mt-4 leading-snug">
+              <p className="text-sm font-bold text-[var(--text-secondary)] text-center max-w-[260px] mx-auto mt-4 leading-snug">
                 Learning is more fun and effective when you connect with others.
               </p>
             </div>
           </div>
 
           {/* 2. Add Friends Card */}
-          <div className="rounded-2xl border-2 border-[#2b3b44] bg-[#18252d]/60 p-5 flex flex-col gap-2">
-            <h3 className="font-black text-base text-white mb-1">Add friends</h3>
+          <div className="rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-5 flex flex-col gap-2">
+            <h3 className="font-black text-base text-[var(--text-primary)] mb-1">Add friends</h3>
 
             {/* Find Friends Option */}
             <button
               type="button"
               onClick={() => triggerToast('Search for learners by username or email!')}
-              className="flex items-center justify-between p-2.5 -mx-2 rounded-xl hover:bg-[#1f2f38] transition-colors cursor-pointer group"
+              className="flex items-center justify-between p-2.5 -mx-2 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-3">
                 <FindFriendsIcon />
-                <span className="font-black text-sm text-white group-hover:text-[#1cb0f6] transition-colors">
+                <span className="font-black text-sm text-[var(--text-primary)] group-hover:text-[#1cb0f6] transition-colors">
                   Find friends
                 </span>
               </div>
@@ -511,11 +512,11 @@ export default function ProfilePage() {
                 }
                 triggerToast('Invite link copied to clipboard!');
               }}
-              className="flex items-center justify-between p-2.5 -mx-2 rounded-xl hover:bg-[#1f2f38] transition-colors cursor-pointer group"
+              className="flex items-center justify-between p-2.5 -mx-2 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-3">
                 <InviteFriendsIcon />
-                <span className="font-black text-sm text-white group-hover:text-[#58cc02] transition-colors">
+                <span className="font-black text-sm text-[var(--text-primary)] group-hover:text-[#58cc02] transition-colors">
                   Invite friends
                 </span>
               </div>
@@ -564,15 +565,15 @@ export default function ProfilePage() {
           onClick={() => setShowViewAllModal(false)}
         >
           <div
-            className="w-full max-w-lg bg-[#18252d] border-2 border-[#2b3b44] rounded-3xl p-6 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+            className="w-full max-w-lg bg-[var(--bg-surface)] border-2 border-[var(--border-color)] rounded-3xl p-6 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#2b3b44]">
-              <h3 className="text-xl font-black text-white">All Achievements</h3>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[var(--border-color)]">
+              <h3 className="text-xl font-black text-[var(--text-primary)]">All Achievements</h3>
               <button
                 type="button"
                 onClick={() => setShowViewAllModal(false)}
-                className="w-8 h-8 rounded-full bg-[#131f24] hover:bg-[#20313b] text-[#778e9b] hover:text-white flex items-center justify-center font-black cursor-pointer"
+                className="w-8 h-8 rounded-full bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center font-black cursor-pointer"
               >
                 ✕
               </button>
@@ -582,7 +583,7 @@ export default function ProfilePage() {
               {achievementsData?.achievements?.map((ach) => (
                 <div
                   key={ach.id}
-                  className="p-4 rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] flex items-center gap-4"
+                  className="p-4 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-subtle)] flex items-center gap-4"
                 >
                   <div className="w-14 h-16 shrink-0 flex items-center justify-center select-none">
                     <img
@@ -600,13 +601,13 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-black text-white text-sm truncate">{ach.title}</h4>
-                      <span className="text-xs font-bold text-[#778e9b]">
+                      <h4 className="font-black text-[var(--text-primary)] text-sm truncate">{ach.title}</h4>
+                      <span className="text-xs font-bold text-[var(--text-secondary)]">
                         {ach.progress}/{ach.threshold}
                       </span>
                     </div>
-                    <p className="text-xs text-[#778e9b] mt-0.5">{ach.description}</p>
-                    <div className="w-full h-2.5 bg-[#2a3a44] rounded-full mt-2 overflow-hidden">
+                    <p className="text-xs text-[var(--text-secondary)] mt-0.5">{ach.description}</p>
+                    <div className="w-full h-2.5 bg-[var(--bg-subtle)] border border-[var(--border-color)] rounded-full mt-2 overflow-hidden">
                       <div
                         className="h-full bg-[#ffc800] rounded-full"
                         style={{

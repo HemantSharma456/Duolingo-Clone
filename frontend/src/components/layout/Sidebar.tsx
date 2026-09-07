@@ -219,7 +219,7 @@ export const Sidebar: React.FC = () => {
         >
           <div
             className={`duo-nav-item cursor-pointer select-none transition-colors ${
-              isMoreActive ? 'bg-[#18252d] text-white border-[#2b3b44]' : ''
+              isMoreActive ? 'bg-[var(--bg-subtle)] text-[var(--text-primary)] border-[var(--border-color)]' : ''
             }`}
           >
             <div className="w-9 h-9 flex items-center justify-center shrink-0">
@@ -231,7 +231,7 @@ export const Sidebar: React.FC = () => {
           {/* FLOATING MORE POPOVER MENU MATCHING REFERENCE SCREENSHOT */}
           {moreMenuOpen && (
             <div
-              className="absolute left-[calc(100%+8px)] top-0 z-50 w-[270px] bg-[#18252d] border-2 border-[#2b3b44] rounded-2xl p-3 shadow-2xl animate-in fade-in zoom-in-95 duration-150 flex flex-col text-left select-none"
+              className="absolute left-[calc(100%+8px)] top-0 z-50 w-[270px] bg-[var(--bg-surface)] border-2 border-[var(--border-color)] rounded-2xl p-3 shadow-2xl animate-in fade-in zoom-in-95 duration-150 flex flex-col text-left select-none"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -243,10 +243,10 @@ export const Sidebar: React.FC = () => {
                 <Link
                   href="/practice"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
                   <EnglishTestIcon />
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#58cc02] transition-colors leading-tight">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#58cc02] transition-colors leading-tight">
                     DUOLINGO ENGLISH TEST
                   </span>
                 </Link>
@@ -255,10 +255,10 @@ export const Sidebar: React.FC = () => {
                 <Link
                   href="/practice"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
                   <SchoolsIcon />
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#1cb0f6] transition-colors leading-tight">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#1cb0f6] transition-colors leading-tight">
                     SCHOOLS
                   </span>
                 </Link>
@@ -267,27 +267,27 @@ export const Sidebar: React.FC = () => {
                 <Link
                   href="/practice"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
                   <PodcastIcon />
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#ce82ff] transition-colors leading-tight">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#ce82ff] transition-colors leading-tight">
                     PODCAST
                   </span>
                 </Link>
               </div>
 
               {/* Horizontal Divider Line */}
-              <div className="h-[1px] bg-[#2b3b44] my-2 mx-1" />
+              <div className="h-[1px] bg-[var(--border-color)] my-2 mx-1" />
 
-              {/* Bottom Section: Text Only, Uppercase Bold White */}
+              {/* Bottom Section: Text Only, Uppercase Bold */}
               <div className="flex flex-col gap-0.5">
                 {/* 4. CREATE A PROFILE */}
                 <Link
                   href="/onboarding?step=6"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#1cb0f6] transition-colors block">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#1cb0f6] transition-colors block">
                     CREATE A PROFILE
                   </span>
                 </Link>
@@ -296,9 +296,9 @@ export const Sidebar: React.FC = () => {
                 <Link
                   href="/settings"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#1cb0f6] transition-colors block">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#1cb0f6] transition-colors block">
                     SETTINGS
                   </span>
                 </Link>
@@ -307,9 +307,9 @@ export const Sidebar: React.FC = () => {
                 <Link
                   href="/settings"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#1cb0f6] transition-colors block">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#1cb0f6] transition-colors block">
                     HELP
                   </span>
                 </Link>
@@ -318,9 +318,9 @@ export const Sidebar: React.FC = () => {
                 <Link
                   href="/welcome"
                   onClick={() => setMoreMenuOpen(false)}
-                  className="p-2.5 rounded-xl hover:bg-[#20313b] transition-colors cursor-pointer group no-underline"
+                  className="p-2.5 rounded-xl hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer group no-underline"
                 >
-                  <span className="font-black text-xs uppercase tracking-wider text-white group-hover:text-[#1cb0f6] transition-colors block">
+                  <span className="font-black text-xs uppercase tracking-wider text-[var(--text-primary)] group-hover:text-[#1cb0f6] transition-colors block">
                     SIGN IN
                   </span>
                 </Link>

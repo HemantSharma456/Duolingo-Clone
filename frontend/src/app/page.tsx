@@ -262,7 +262,7 @@ export default function LearnPage() {
     <div className="duo-path-layout">
       {/* Toast message when clicking locked node */}
       {lockedTooltip && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#1f2e35] border-2 border-[#2b3a42] text-white px-5 py-3 rounded-2xl shadow-2xl font-black text-xs uppercase tracking-wider flex items-center gap-2 animate-bounce">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[var(--bg-surface)] border-2 border-[var(--border-color)] text-[var(--text-primary)] px-5 py-3 rounded-2xl shadow-2xl font-black text-xs uppercase tracking-wider flex items-center gap-2 animate-bounce">
           <span>🔒</span>
           <span>{lockedTooltip}</span>
         </div>
@@ -353,7 +353,7 @@ export default function LearnPage() {
                           className={isClaimed ? 'opacity-70 grayscale-[20%]' : isActive ? 'animate-pulse' : ''}
                         />
                         {isClaimed && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#58cc02] border-2 border-[#131f24] flex items-center justify-center text-white text-[11px] font-black shadow-sm">
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#58cc02] border-2 border-[var(--bg-main)] flex items-center justify-center text-white text-[11px] font-black shadow-sm">
                             ✓
                           </div>
                         )}
@@ -524,7 +524,7 @@ export default function LearnPage() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-20 sm:bottom-8 right-6 z-40 w-12 h-12 rounded-full bg-[#23333b] hover:bg-[#2b3e48] border-2 border-[#37464f] text-white flex items-center justify-center shadow-xl transition-all hover:scale-110 cursor-pointer animate-bounce"
+          className="fixed bottom-20 sm:bottom-8 right-6 z-40 w-12 h-12 rounded-full bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] border-2 border-[var(--border-color)] text-[var(--text-primary)] flex items-center justify-center shadow-xl transition-all hover:scale-110 cursor-pointer animate-bounce"
           aria-label="Scroll to top"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

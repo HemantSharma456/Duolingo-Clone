@@ -345,7 +345,7 @@ export const Topbar: React.FC = () => {
                 <div className="w-[36px] h-[26px] rounded-lg overflow-hidden border-2 border-white shadow-xs flex items-center justify-center shrink-0">
                   <FlagIcon code={activeCourse.language_code} width={36} height={26} />
                 </div>
-                <span className="text-white font-black text-base leading-none">
+                <span className="text-[var(--text-primary)] font-black text-base leading-none">
                   1
                 </span>
               </button>
@@ -354,26 +354,26 @@ export const Topbar: React.FC = () => {
               {activePopover === 'flag' && (
                 <>
                   {/* Upward Caret pointing directly to the center of the flag button */}
-                  <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[#131f24] border-t-2 border-l-2 border-[#2b3b44] z-50 pointer-events-none" />
+                  <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[var(--bg-surface)] border-t-2 border-l-2 border-[var(--border-color)] z-50 pointer-events-none" />
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] left-0 sm:left-[-30px] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 overflow-hidden select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] left-0 sm:left-[-30px] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] shadow-2xl z-40 overflow-hidden select-none duo-popover-animate"
                     onMouseEnter={() => openPopover('flag')}
                     onMouseLeave={scheduleClose}
                   >
-                    <div className="px-4.5 pt-3.5 pb-2 text-[12px] font-black uppercase text-[#6f8490] tracking-wider">
+                    <div className="px-4.5 pt-3.5 pb-2 text-[12px] font-black uppercase text-[var(--text-muted)] tracking-wider">
                       MY COURSES
                     </div>
 
                     {/* Divider Line */}
-                    <div className="border-t border-[#2b3b44]" />
+                    <div className="border-t border-[var(--border-color)]" />
 
                     {/* Active / Enrolled Course */}
                     <button
                       type="button"
                       onClick={() => setActivePopover(null)}
-                      className="w-full flex items-center gap-3.5 px-4.5 py-3 bg-[#131f24] hover:bg-[#18252d] text-left transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-3.5 px-4.5 py-3 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-left transition-colors cursor-pointer"
                     >
                       <div className="w-[36px] h-[26px] rounded-lg overflow-hidden border-2 border-white shadow-xs flex items-center justify-center shrink-0">
                         <FlagIcon code={activeCourse.language_code} width={36} height={26} />
@@ -384,15 +384,15 @@ export const Topbar: React.FC = () => {
                     </button>
 
                     {/* Divider Line */}
-                    <div className="border-t border-[#2b3b44]" />
+                    <div className="border-t border-[var(--border-color)]" />
 
                     {/* + Add a new course Button */}
                     <Link
                       href="/courses"
                       onClick={() => setActivePopover(null)}
-                      className="w-full flex items-center gap-3.5 px-4.5 py-3.5 bg-[#131f24] hover:bg-[#18252d] text-white no-underline transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-3.5 px-4.5 py-3.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] no-underline transition-colors cursor-pointer group"
                     >
-                      <div className="w-8 h-8 rounded-lg border-2 border-[#2b3b44] flex items-center justify-center text-[#6f8490] group-hover:text-white group-hover:border-[#526571] transition-colors shrink-0">
+                      <div className="w-8 h-8 rounded-lg border-2 border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-hover:border-[var(--text-secondary)] transition-colors shrink-0">
                         <svg
                           width="15"
                           height="15"
@@ -406,7 +406,7 @@ export const Topbar: React.FC = () => {
                           <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
                       </div>
-                      <span className="font-black text-[14px] text-white group-hover:text-white leading-none">
+                      <span className="font-black text-[14px] text-[var(--text-primary)] leading-none">
                         Add a new course
                       </span>
                     </Link>
@@ -506,7 +506,7 @@ export const Topbar: React.FC = () => {
                     </div>
 
                     {/* Middle Cards Section */}
-                    <div className="p-4 flex flex-col gap-3 bg-[#131f24]">
+                    <div className="p-4 flex flex-col gap-3 bg-[var(--bg-surface)]">
                       {/* Friend Streaks Card */}
                       <div className="rounded-2xl p-4 bg-gradient-to-r from-[#ff5e00] to-[#ff7a00] text-white flex items-center justify-between gap-3 relative overflow-hidden shadow-xs">
                         <div className="flex-1">
@@ -528,15 +528,15 @@ export const Topbar: React.FC = () => {
                       </div>
 
                       {/* Streak Society Card */}
-                      <div className="rounded-2xl p-4 bg-[#18262f] border border-[#2b3a42] flex items-start gap-3.5">
-                        <div className="w-11 h-11 rounded-xl bg-[#23333d] flex items-center justify-center text-xl text-[#6f8490] shrink-0 select-none">
+                      <div className="rounded-2xl p-4 bg-[var(--bg-subtle)] border border-[var(--border-color)] flex items-start gap-3.5">
+                        <div className="w-11 h-11 rounded-xl bg-[var(--border-color)] flex items-center justify-center text-xl text-[var(--text-muted)] shrink-0 select-none">
                           🔒
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-black text-[15px] text-white leading-tight">
+                          <h4 className="font-black text-[15px] text-[var(--text-primary)] leading-tight">
                             Streak Society
                           </h4>
-                          <p className="text-xs font-medium text-[#8e9ca5] mt-1 leading-relaxed">
+                          <p className="text-xs font-medium text-[var(--text-secondary)] mt-1 leading-relaxed">
                             Reach a 7 day streak to join the Streak Society and earn exclusive rewards.
                           </p>
                         </div>
@@ -579,11 +579,11 @@ export const Topbar: React.FC = () => {
               {activePopover === 'gems' && (
                 <>
                   {/* Upward Caret pointing directly to the center of the gems button */}
-                  <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[#131f24] border-t-2 border-l-2 border-[#2b3b44] z-50 pointer-events-none" />
+                  <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[var(--bg-surface)] border-t-2 border-l-2 border-[var(--border-color)] z-50 pointer-events-none" />
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] right-[-50px] sm:right-[-40px] w-[340px] sm:w-[350px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 p-5 select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] right-[-50px] sm:right-[-40px] w-[340px] sm:w-[350px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] shadow-2xl z-40 p-5 select-none duo-popover-animate"
                     onMouseEnter={() => openPopover('gems')}
                     onMouseLeave={scheduleClose}
                   >
@@ -593,10 +593,10 @@ export const Topbar: React.FC = () => {
 
                       {/* Right: Text and Link */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-black text-[22px] text-white tracking-tight leading-none mb-2">
+                        <h3 className="font-black text-[22px] text-[var(--text-primary)] tracking-tight leading-none mb-2">
                           Gems
                         </h3>
-                        <p className="text-[15px] font-bold text-[#d7e0e5] leading-snug mb-3.5">
+                        <p className="text-[15px] font-bold text-[var(--text-secondary)] leading-snug mb-3.5">
                           You have {user?.gems ?? 505} gems
                         </p>
                         <Link
@@ -639,16 +639,16 @@ export const Topbar: React.FC = () => {
               {activePopover === 'hearts' && (
                 <>
                   {/* Upward Caret pointing directly to the center of the hearts button */}
-                  <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[#131f24] border-t-2 border-l-2 border-[#2b3b44] z-50 pointer-events-none" />
+                  <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[var(--bg-surface)] border-t-2 border-l-2 border-[var(--border-color)] z-50 pointer-events-none" />
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] right-0 w-[340px] sm:w-[360px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 p-5 select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] right-0 w-[340px] sm:w-[360px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] shadow-2xl z-40 p-5 select-none duo-popover-animate"
                     onMouseEnter={() => openPopover('hearts')}
                     onMouseLeave={scheduleClose}
                   >
                     {/* Header Title: Hearts */}
-                    <h3 className="text-center font-black text-[22px] text-white tracking-tight leading-none mb-4">
+                    <h3 className="text-center font-black text-[22px] text-[var(--text-primary)] tracking-tight leading-none mb-4">
                       Hearts
                     </h3>
 
@@ -696,17 +696,17 @@ export const Topbar: React.FC = () => {
                     </div>
 
                     {/* Next heart in 4 hours */}
-                    <p className="text-center font-bold text-[15px] text-white leading-none mb-2">
+                    <p className="text-center font-bold text-[15px] text-[var(--text-primary)] leading-none mb-2">
                       Next heart in <span className="text-[#ff4b4b]">4 hours</span>
                     </p>
 
                     {/* Subtitle */}
-                    <p className="text-center font-bold text-[14px] text-[#e0e6eb] leading-snug mb-5">
+                    <p className="text-center font-bold text-[14px] text-[var(--text-secondary)] leading-snug mb-5">
                       You still have hearts left! Keep on learning
                     </p>
 
                     {refillMsg && (
-                      <div className="mb-3 p-2.5 rounded-xl bg-[#202f36] text-xs font-bold text-center text-[#1cb0f6]">
+                      <div className="mb-3 p-2.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--border-color)] text-xs font-bold text-center text-[#1cb0f6]">
                         {refillMsg}
                       </div>
                     )}
@@ -720,7 +720,7 @@ export const Topbar: React.FC = () => {
                           setActivePopover(null);
                           router.push('/shop');
                         }}
-                        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] hover:bg-[#1f2e37] transition-colors cursor-pointer text-left group"
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer text-left group"
                       >
                         <div className="flex items-center gap-3">
                           {/* Teal-Purple Gradient Heart with Infinity symbol */}
@@ -749,7 +749,7 @@ export const Topbar: React.FC = () => {
                               ∞
                             </text>
                           </svg>
-                          <span className="font-black text-[13px] uppercase tracking-wider text-white">
+                          <span className="font-black text-[13px] uppercase tracking-wider text-[var(--text-primary)]">
                             UNLIMITED HEARTS
                           </span>
                         </div>
@@ -763,7 +763,7 @@ export const Topbar: React.FC = () => {
                         type="button"
                         disabled={refilling || (user?.hearts ?? 5) >= 5}
                         onClick={handleRefillGems}
-                        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] hover:bg-[#1f2e37] disabled:opacity-60 transition-colors cursor-pointer text-left group"
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] disabled:opacity-60 transition-colors cursor-pointer text-left group"
                       >
                         <div className="flex items-center gap-3">
                           <svg width="26" height="24" viewBox="0 0 30 28" fill="none" className="shrink-0 select-none">
@@ -775,7 +775,7 @@ export const Topbar: React.FC = () => {
                               strokeLinejoin="round"
                             />
                           </svg>
-                          <span className="font-black text-[13px] uppercase tracking-wider text-white">
+                          <span className="font-black text-[13px] uppercase tracking-wider text-[var(--text-primary)]">
                             REFILL HEARTS
                           </span>
                         </div>
@@ -800,7 +800,7 @@ export const Topbar: React.FC = () => {
                       <Link
                         href="/practice"
                         onClick={() => setActivePopover(null)}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] hover:bg-[#1f2e37] transition-colors cursor-pointer text-left no-underline group"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer text-left no-underline group"
                       >
                         <svg width="22" height="20" viewBox="0 0 30 28" fill="none" className="shrink-0 select-none">
                           <path
@@ -808,7 +808,7 @@ export const Topbar: React.FC = () => {
                             fill="#ff4b4b"
                           />
                         </svg>
-                        <span className="font-black text-[13px] uppercase tracking-wider text-white">
+                        <span className="font-black text-[13px] uppercase tracking-wider text-[var(--text-primary)]">
                           PRACTICE TO EARN HEARTS
                         </span>
                       </Link>

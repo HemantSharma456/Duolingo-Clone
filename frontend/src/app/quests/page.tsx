@@ -111,15 +111,15 @@ export default function QuestsPage() {
       )}
 
       {/* Header Banner */}
-      <div className="w-full rounded-3xl border-2 border-[#2b3b44] bg-[#131f24] p-6 sm:p-8 flex items-center justify-between gap-6 relative overflow-hidden shadow-xs">
+      <div className="w-full rounded-3xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-6 sm:p-8 flex items-center justify-between gap-6 relative overflow-hidden shadow-xs">
         <div className="flex-1">
-          <div className="inline-block px-3 py-1 rounded-full bg-[#1e2f38] border border-[#2e424e] text-xs font-black text-[#58cc02] uppercase tracking-wider mb-2">
+          <div className="inline-block px-3 py-1 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-color)] text-xs font-black text-[#58cc02] uppercase tracking-wider mb-2">
             DAILY CHALLENGES
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] leading-tight">
             Quests & Rewards
           </h1>
-          <p className="text-sm font-semibold text-[#8e9ca5] mt-1.5 leading-relaxed max-w-md">
+          <p className="text-sm font-semibold text-[var(--text-secondary)] mt-1.5 leading-relaxed max-w-md">
             Complete daily and monthly milestones to earn bonus gems, maintain your streak, and unlock special badges.
           </p>
         </div>
@@ -130,27 +130,27 @@ export default function QuestsPage() {
       </div>
 
       {/* Monthly Badge Quest Challenge */}
-      <div className="w-full rounded-3xl border-2 border-[#2b3b44] bg-[#131f24] p-6 flex flex-col gap-4 shadow-xs">
+      <div className="w-full rounded-3xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-6 flex flex-col gap-4 shadow-xs">
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xs font-black text-[#ce82ff] uppercase tracking-wider">
               MONTHLY BADGE QUEST
             </span>
-            <h2 className="text-xl font-black text-white mt-0.5">
+            <h2 className="text-xl font-black text-[var(--text-primary)] mt-0.5">
               September Challenge
             </h2>
           </div>
-          <span className="text-xs font-extrabold text-[#8e9ca5] uppercase">
+          <span className="text-xs font-extrabold text-[var(--text-secondary)] uppercase">
             22 DAYS LEFT
           </span>
         </div>
 
-        <div className="flex items-center gap-5 bg-[#18262f] border border-[#283842] rounded-2xl p-4">
+        <div className="flex items-center gap-5 bg-[var(--bg-subtle)] border border-[var(--border-color)] rounded-2xl p-4">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#ce82ff] to-[#7928ca] flex items-center justify-center text-3xl shadow-md shrink-0">
             🌌
           </div>
           <div className="flex-1">
-            <div className="flex items-center justify-between text-sm font-black text-white mb-2">
+            <div className="flex items-center justify-between text-sm font-black text-[var(--text-primary)] mb-2">
               <span>Complete 30 Quests</span>
               <span className="text-[#ce82ff]">{12 + completedCount} / 30</span>
             </div>
@@ -166,8 +166,8 @@ export default function QuestsPage() {
       {/* Daily Quests List */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-lg font-black text-white">Daily Quests</h3>
-          <span className="text-xs font-extrabold text-[#607482] uppercase tracking-wider">
+          <h3 className="text-lg font-black text-[var(--text-primary)]">Daily Quests</h3>
+          <span className="text-xs font-extrabold text-[var(--text-secondary)] uppercase tracking-wider">
             REFRESHES IN 18H
           </span>
         </div>
@@ -181,15 +181,15 @@ export default function QuestsPage() {
           return (
             <div
               key={quest.id}
-              className="w-full rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs transition-all hover:border-[#384b55]"
+              className="w-full rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs transition-all hover:border-[#384b55]"
             >
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-12 h-12 rounded-2xl bg-[#1b272f] border border-[#2b3b44] flex items-center justify-center text-2xl shrink-0 select-none">
+                <div className="w-12 h-12 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-color)] flex items-center justify-center text-2xl shrink-0 select-none">
                   {quest.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1.5">
-                    <h4 className="font-black text-base text-white truncate">
+                    <h4 className="font-black text-base text-[var(--text-primary)] truncate">
                       {quest.title}
                     </h4>
                     <span className="text-xs font-black text-[#ffc800] ml-2 shrink-0">
@@ -205,7 +205,7 @@ export default function QuestsPage() {
                         height={10}
                       />
                     </div>
-                    <span className="text-xs font-black text-[#8e9ca5] shrink-0">
+                    <span className="text-xs font-black text-[var(--text-secondary)] shrink-0">
                       {quest.current} / {quest.target}
                     </span>
                   </div>
@@ -217,7 +217,7 @@ export default function QuestsPage() {
                 {quest.claimed ? (
                   <button
                     disabled
-                    className="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#18262f] text-[#607482] font-black text-xs uppercase tracking-wider border border-[#2b3b44] cursor-default"
+                    className="w-full sm:w-auto px-5 py-2 rounded-xl bg-[var(--bg-subtle)] text-[var(--text-secondary)] font-black text-xs uppercase tracking-wider border border-[var(--border-color)] cursor-default"
                   >
                     CLAIMED ✓
                   </button>
@@ -246,16 +246,16 @@ export default function QuestsPage() {
       </div>
 
       {/* Practice & Heart Refill Card */}
-      <div className="w-full rounded-3xl border-2 border-[#2b3b44] bg-[#131f24] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs mt-2">
+      <div className="w-full rounded-3xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs mt-2">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 rounded-2xl bg-[#ff4b4b]/15 border-2 border-[#ff4b4b]/30 flex items-center justify-center text-3xl shrink-0 select-none">
             ❤️
           </div>
           <div>
-            <h3 className="text-lg font-black text-white">
+            <h3 className="text-lg font-black text-[var(--text-primary)]">
               Need to Refill Hearts?
             </h3>
-            <p className="text-xs font-semibold text-[#8e9ca5] mt-1 max-w-sm">
+            <p className="text-xs font-semibold text-[var(--text-secondary)] mt-1 max-w-sm">
               Practice personalized exercises calibrated to your course to recover hearts and earn extra XP.
             </p>
           </div>
