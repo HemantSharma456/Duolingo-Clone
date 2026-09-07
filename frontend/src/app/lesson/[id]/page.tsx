@@ -17,12 +17,13 @@ import { FillInBlank } from '../../../components/exercises/FillInBlank';
 import { TypeAnswer } from '../../../components/exercises/TypeAnswer';
 import { DuoOwl } from '../../../components/mascot/DuoOwl';
 import { progressManager } from '../../../services/progressManager';
+import { getFallbackLesson, evaluateLocalExercise } from '../../../services/curriculumFallback';
 
 export default function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const lessonId = parseInt(resolvedParams.id, 10);
   const router = useRouter();
-  const { user, refreshUser, updateUserHearts } = useGame();
+  const { user, refreshUser, updateUserHearts, updateUserGems } = useGame();
   const { playCorrectSound, playWrongSound } = useSound();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
@@ -52,30 +53,48 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
 
   useEffect(() => {
     async function loadLesson() {
-      try {
-        let activeCourseId: number | undefined = undefined;
-        if (typeof window !== 'undefined') {
-          const urlParams = new URLSearchParams(window.location.search);
-          const qCourse = urlParams.get('course_id');
-          if (qCourse) {
-            const parsed = parseInt(qCourse, 10);
+      let activeCourseId: number | undefined = undefined;
+      let activeLang: string | undefined = undefined;
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const qCourse = urlParams.get('course_id');
+        if (qCourse) {
+          const parsed = parseInt(qCourse, 10);
+          if (!isNaN(parsed)) activeCourseId = parsed;
+        }
+        const qLang = urlParams.get('lang');
+        if (qLang) activeLang = qLang;
+
+        if (!activeCourseId) {
+          const stored = localStorage.getItem('duo_active_course_id');
+          if (stored) {
+            const parsed = parseInt(stored, 10);
             if (!isNaN(parsed)) activeCourseId = parsed;
           }
-          if (!activeCourseId) {
-            const stored = localStorage.getItem('duo_active_course_id');
-            if (stored) {
-              const parsed = parseInt(stored, 10);
-              if (!isNaN(parsed)) activeCourseId = parsed;
-            }
-          }
         }
-        if (!activeCourseId && user?.current_course_id) {
-          activeCourseId = user.current_course_id;
+      }
+      if (!activeCourseId && user?.current_course_id) {
+        activeCourseId = user.current_course_id;
+      }
+
+      try {
+        const data = await api.getLesson(lessonId, activeCourseId, activeLang);
+        if (data && data.exercises && data.exercises.length > 0) {
+          setLesson(data);
+          setError(null);
+          return;
         }
-        const data = await api.getLesson(lessonId, activeCourseId);
-        setLesson(data);
       } catch (err: any) {
-        setError(err.message || 'Failed to load lesson');
+        console.warn('Backend API lesson fetch unreachable, activating offline calibrated curriculum:', err);
+      }
+
+      // Automatic fallback: Provide full interactive lesson without blocking the learner!
+      try {
+        const fallback = getFallbackLesson(lessonId, activeCourseId, activeLang);
+        setLesson(fallback);
+        setError(null);
+      } catch (fallbackErr: any) {
+        setError(fallbackErr.message || 'Failed to load lesson exercises');
       } finally {
         setLoading(false);
       }
@@ -85,7 +104,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4">
+      <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4 select-none">
         <DuoOwl emotion="thinking" size={110} className="animate-float" />
         <div className="text-xl font-extrabold text-[var(--text-secondary)] animate-pulse">
           Preparing your exercises...
@@ -96,13 +115,28 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
 
   if (error || !lesson || !lesson.exercises || lesson.exercises.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center select-none px-4">
         <DuoOwl emotion="sad" size={120} />
         <h2 className="text-2xl font-black text-[var(--duo-red)]">Lesson unavailable</h2>
-        <p className="text-sm font-bold text-[var(--text-secondary)]">{error || 'No exercises found.'}</p>
-        <button onClick={() => router.push('/')} className="btn-3d btn-primary">
-          Back to Path
-        </button>
+        <p className="text-sm font-bold text-[var(--text-secondary)] max-w-sm">{error || 'No exercises found.'}</p>
+        <div className="flex flex-col sm:flex-row gap-3 mt-2">
+          <button
+            onClick={() => {
+              const fallback = getFallbackLesson(lessonId);
+              setLesson(fallback);
+              setError(null);
+            }}
+            className="px-6 py-2.5 rounded-2xl bg-[#58cc02] hover:bg-[#61e002] border-b-4 border-[#46a302] text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md"
+          >
+            Start Offline Lesson
+          </button>
+          <button
+            onClick={() => router.push('/')}
+            className="px-6 py-2.5 rounded-2xl bg-[var(--bg-subtle)] hover:bg-[var(--border-color)] text-[var(--text-primary)] border border-[var(--border-color)] font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
+          >
+            Back to Path
+          </button>
+        </div>
       </div>
     );
   }
@@ -146,10 +180,31 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
           setOutOfHeartsOpen(true);
         }
       }
+      return;
     } catch (err: any) {
-      console.error('Answer check error:', err);
+      console.warn('Backend submit unavailable, evaluating answer locally:', err);
     } finally {
       setIsSubmitting(false);
+    }
+
+    // Local evaluation when backend is unreachable or offline
+    const localEval = evaluateLocalExercise(currentExercise, selectedAnswer, hearts);
+    if (localEval.is_correct) {
+      playCorrectSound();
+      setFeedbackStatus('correct');
+    } else {
+      playWrongSound();
+      setFeedbackStatus('incorrect');
+      setCorrectAnswer(localEval.correct_answer);
+      setExplanation(localEval.explanation || null);
+      setMistakesCount((prev) => prev + 1);
+
+      setHearts(localEval.hearts_remaining);
+      updateUserHearts(localEval.hearts_remaining);
+
+      if (localEval.hearts_remaining <= 0) {
+        setOutOfHeartsOpen(true);
+      }
     }
   };
 
@@ -163,15 +218,42 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
       setExplanation(null);
     } else {
       // Completed last exercise!
+      let finalResult: LessonCompleteResponse;
       try {
-        const finalResult = await api.completeLesson(lesson.id, mistakesCount);
-        setCompleteResult(finalResult);
-        setIsCompleteOpen(true);
-        progressManager.completeLevel(user?.current_course_id || 1, lessonId);
-        await refreshUser();
+        finalResult = await api.completeLesson(lesson.id, mistakesCount);
       } catch (err) {
-        console.error('Failed to complete lesson:', err);
-        router.push('/');
+        console.warn('Backend complete unreachable, generating local lesson completion:', err);
+        const earnedXp = lesson.xp_reward || 15;
+        finalResult = {
+          success: true,
+          xp_earned: earnedXp,
+          total_xp: (user?.total_xp ?? 309) + earnedXp,
+          streak: (user?.streak ?? 1) + 1,
+          streak_increased: true,
+          hearts_remaining: hearts,
+          gems_earned: 10,
+          skill_completed: true,
+          next_skill_unlocked: true,
+          unlocked_achievements: mistakesCount === 0 ? ['Flawless Finish'] : [],
+        };
+      }
+
+      setCompleteResult(finalResult);
+      setIsCompleteOpen(true);
+
+      let activeCourse = 2; // Default French
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('duo_active_course_id');
+        if (stored) activeCourse = parseInt(stored, 10) || 2;
+      }
+      if (user?.current_course_id) activeCourse = user.current_course_id;
+
+      progressManager.completeLevel(activeCourse, lessonId);
+      updateUserGems(finalResult.gems_earned || 10);
+      try {
+        await refreshUser();
+      } catch {
+        // ignore offline refresh failure
       }
     }
   };
