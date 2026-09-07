@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Exercise } from '../../types';
 import { useSound } from '../../context/SoundContext';
 
@@ -18,7 +18,20 @@ export const FillInBlank: React.FC<FillInBlankProps> = ({
   disabled,
 }) => {
   const { speak, playClickSound } = useSound();
-  const options: string[] = Array.isArray(exercise.options) ? exercise.options : [];
+
+  // Shuffle options so the correct answer is not always first
+  const options: string[] = useMemo(() => {
+    if (!Array.isArray(exercise.options)) return [];
+    const copy = [...exercise.options];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    if (copy.length > 1 && copy.every((val, idx) => val === exercise.options[idx])) {
+      [copy[0], copy[1]] = [copy[1], copy[0]];
+    }
+    return copy;
+  }, [exercise.id, exercise.options]);
   const meta = exercise.metadata || {};
   const prefix = meta.sentence_prefix || '';
   const suffix = meta.sentence_suffix || '';

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Exercise } from '../../types';
 import { useSound } from '../../context/SoundContext';
 
@@ -18,7 +18,29 @@ export const MultipleChoice: React.FC<MultipleChoiceProps> = ({
   disabled,
 }) => {
   const { speak } = useSound();
-  const options = Array.isArray(exercise.options) ? exercise.options : [];
+
+  // Shuffle options so the correct answer is randomized across positions
+  const options = useMemo(() => {
+    if (!Array.isArray(exercise.options)) return [];
+    const copy = [...exercise.options];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    // If array has multiple items and happened to remain in exact order, swap first two
+    if (
+      copy.length > 1 &&
+      copy.every((val, idx) => {
+        const orig = exercise.options[idx];
+        const valText = typeof val === 'object' ? val?.text : val;
+        const origText = typeof orig === 'object' ? orig?.text : orig;
+        return valText === origText;
+      })
+    ) {
+      [copy[0], copy[1]] = [copy[1], copy[0]];
+    }
+    return copy;
+  }, [exercise.id, exercise.options]);
 
   // Keyboard shortcut listener for 1, 2, 3
   useEffect(() => {

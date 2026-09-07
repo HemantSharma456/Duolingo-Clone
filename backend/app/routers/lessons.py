@@ -19,6 +19,17 @@ from app.services.curriculum_service import get_calibrated_level_exercises
 
 router = APIRouter(prefix="/api/lessons", tags=["Lessons & Exercises"])
 
+def shuffle_options_for_client(ex_type: str, options: Any) -> Any:
+    """Ensures multiple choice, word bank, and fill-in-the-blank options are shuffled."""
+    if not options or not isinstance(options, list):
+        return options
+    if ex_type in ("multiple_choice", "word_bank", "fill_in_blank"):
+        shuffled = list(options)
+        import random
+        random.shuffle(shuffled)
+        return shuffled
+    return options
+
 def parse_exercise_for_client(ex: Exercise) -> ExerciseResponse:
     """Helper to parse JSON fields safely while concealing the correct answer from client."""
     options = None
@@ -43,7 +54,7 @@ def parse_exercise_for_client(ex: Exercise) -> ExerciseResponse:
         prompt=ex.prompt,
         prompt_translation=ex.prompt_translation,
         audio_text=ex.audio_text,
-        options=options,
+        options=shuffle_options_for_client(ex.type, options),
         metadata=metadata
     )
 
@@ -95,7 +106,7 @@ def get_practice_session(
                     prompt=ex["prompt"],
                     prompt_translation=ex.get("prompt_translation"),
                     audio_text=ex.get("audio_text"),
-                    options=ex.get("options"),
+                    options=shuffle_options_for_client(ex["type"], ex.get("options")),
                     metadata=ex.get("metadata")
                 )
                 for idx, ex in enumerate(sampled, 1)
@@ -129,7 +140,7 @@ def get_practice_session(
                     prompt=ex["prompt"],
                     prompt_translation=ex.get("prompt_translation"),
                     audio_text=ex.get("audio_text"),
-                    options=ex.get("options"),
+                    options=shuffle_options_for_client(ex["type"], ex.get("options")),
                     metadata=ex.get("metadata")
                 )
                 for idx, ex in enumerate(exercises[:5], 1)
@@ -197,7 +208,7 @@ def get_lesson(
                     prompt=ex["prompt"],
                     prompt_translation=ex.get("prompt_translation"),
                     audio_text=ex.get("audio_text"),
-                    options=ex.get("options"),
+                    options=shuffle_options_for_client(ex["type"], ex.get("options")),
                     metadata=ex.get("metadata")
                 )
             )
@@ -250,7 +261,7 @@ def get_lesson(
                     prompt=ex["prompt"],
                     prompt_translation=ex.get("prompt_translation"),
                     audio_text=ex.get("audio_text"),
-                    options=ex.get("options"),
+                    options=shuffle_options_for_client(ex["type"], ex.get("options")),
                     metadata=ex.get("metadata")
                 )
                 for idx, ex in enumerate(calibrated_en["exercises"], 1)
