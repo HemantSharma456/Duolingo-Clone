@@ -1,13 +1,30 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { GameProvider } from '../context/GameContext';
 import { SoundProvider } from '../context/SoundContext';
 import { ThemeProvider } from '../context/ThemeContext';
 import { AppShell } from '../components/layout/AppShell';
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#131f24',
+};
+
 export const metadata: Metadata = {
   title: 'Duolingo — The world’s best way to learn a language',
-  description: 'Practice languages with fun, bite-sized lessons in an authentic Duolingo clone featuring 8 courses, 5 exercise types, streak tracking, hearts, and leaderboards.',
+  description: 'Practice languages with fun, bite-sized lessons in an authentic Duolingo clone featuring 11 courses, 5 exercise types, streak tracking, hearts, and leaderboards.',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Duolingo',
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({

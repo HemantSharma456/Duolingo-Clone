@@ -341,8 +341,8 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="relative flex flex-col items-center z-20 mb-8 cursor-pointer group"
-                      style={{ transform: `translateX(${node.offsetX}px)` }}
+                      className="duo-skill-node relative flex flex-col items-center z-20 mb-8 cursor-pointer group"
+                      style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                       onClick={() => handleChestClick(node.level, unit.unitNumber)}
                     >
                       {isActive && <OpenPill />}
@@ -367,8 +367,8 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="relative flex flex-col items-center z-30 mb-8 cursor-pointer group"
-                      style={{ transform: `translateX(${node.offsetX}px)` }}
+                      className="duo-skill-node relative flex flex-col items-center z-30 mb-8 cursor-pointer group"
+                      style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                       onClick={() =>
                         setJumpModal({
                           isOpen: true,
@@ -397,8 +397,8 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="relative flex flex-col items-center z-30 mb-8"
-                      style={{ transform: `translateX(${node.offsetX}px)` }}
+                      className="duo-skill-node relative flex flex-col items-center z-30 mb-8"
+                      style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                     >
                       {isPopoverOpen && (
                         <SkillPopover
@@ -449,8 +449,8 @@ export default function LearnPage() {
                   return (
                     <div
                       key={node.level}
-                      className="relative flex flex-col items-center z-20 mb-8 cursor-pointer group"
-                      style={{ transform: `translateX(${node.offsetX}px)` }}
+                      className="duo-skill-node relative flex flex-col items-center z-20 mb-8 cursor-pointer group"
+                      style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                       onClick={() =>
                         setActivePopoverLevel((prev) => (prev === node.level ? null : node.level))
                       }
@@ -484,8 +484,8 @@ export default function LearnPage() {
                 return (
                   <div
                     key={node.level}
-                    className="relative flex flex-col items-center z-10 mb-8 cursor-pointer"
-                    style={{ transform: `translateX(${node.offsetX}px)` }}
+                    className="duo-skill-node relative flex flex-col items-center z-10 mb-8 cursor-pointer"
+                    style={{ '--node-offset': `${node.offsetX}px` } as React.CSSProperties}
                     onClick={() => handleLockedClick(node.title)}
                   >
                     <div className="w-[74px] h-[74px] rounded-full bg-[#23333b] border-b-8 border-[#19252c] flex items-center justify-center hover:brightness-110 transition-transform">

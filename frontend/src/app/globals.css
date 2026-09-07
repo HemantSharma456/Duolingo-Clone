@@ -469,10 +469,12 @@ body {
     margin-left: 0 !important;
   }
   .duo-topbar {
-    padding: 0 16px;
+    padding: 0 12px;
+    height: 58px;
+    padding-top: env(safe-area-inset-top, 0px);
   }
   .duo-page-container {
-    padding: 20px 16px 96px !important;
+    padding: 12px 12px 96px !important;
   }
   .duo-mobile-nav {
     display: flex !important;
@@ -480,13 +482,47 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 64px;
+    min-height: 64px;
     z-index: 40;
     border-top: 2px solid var(--border-color);
     background-color: var(--bg-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     align-items: center;
     justify-content: space-around;
-    padding: 0 8px;
+  }
+}
+
+/* Mobile Touch & App Polish */
+html, body {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior-y: none;
+}
+
+/* Prevent iOS Safari automatic zoom on inputs while allowing larger responsive typography */
+input, select, textarea {
+  font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  .key-badge {
+    display: none !important;
+  }
+  .duo-popover-animate {
+    max-width: calc(100vw - 24px) !important;
+  }
+  .duo-shop-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 16px !important;
+  }
+  .duo-shop-row button {
+    width: 100% !important;
+  }
+  .duo-leaderboard-row {
+    padding: 12px 16px !important;
   }
 }
 
@@ -548,7 +584,7 @@ body {
 @media (max-width: 1024px) {
   .duo-path-layout {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 0;
   }
 }
 
@@ -580,9 +616,7 @@ body {
 
 @media (max-width: 1024px) {
   .duo-path-aside {
-    position: static;
-    max-width: 580px;
-    margin: 0 auto;
+    display: none !important;
   }
 }
 
@@ -703,6 +737,17 @@ body {
   background-color: var(--duo-blue-light);
   border-left: 4px solid var(--duo-blue);
   color: var(--duo-blue-dark);
+}
+
+[data-theme='dark'] .duo-leaderboard-row.active {
+  background-color: #173445;
+  color: #70d6ff;
+  border-left-color: #1cb0f6;
+}
+
+[data-theme='dark'] .duo-leaderboard-banner {
+  background-color: #272314;
+  border-color: #634e00;
 }
 
 /* Profile */

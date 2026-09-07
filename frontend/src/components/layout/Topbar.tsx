@@ -326,7 +326,7 @@ export const Topbar: React.FC = () => {
           <div
             ref={navContainerRef}
             onMouseLeave={scheduleClose}
-            className="flex items-center gap-7 sm:gap-8 font-black text-sm select-none"
+            className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 sm:gap-8 font-black text-sm select-none"
           >
             {/* Flag Badge Button with Hover Popover matching user screenshot */}
             <div
@@ -358,7 +358,7 @@ export const Topbar: React.FC = () => {
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] left-[-30px] w-[260px] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 overflow-hidden select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] left-0 sm:left-[-30px] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 overflow-hidden select-none duo-popover-animate"
                     onMouseEnter={() => openPopover('flag')}
                     onMouseLeave={scheduleClose}
                   >
@@ -442,7 +442,7 @@ export const Topbar: React.FC = () => {
                   <div className="absolute top-[calc(100%+3px)] left-1/2 -translate-x-1/2 w-3.5 h-3.5 rotate-45 bg-[#b86200] border-t-2 border-l-2 border-[#37464f] z-50 pointer-events-none" />
 
                   <div
-                    className="absolute top-[calc(100%+8px)] -right-16 sm:right-0 w-[350px] sm:w-[370px] rounded-3xl border-2 border-[#37464f] bg-[#131f24] shadow-2xl z-40 overflow-hidden duo-popover-animate select-none"
+                    className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 w-[350px] sm:w-[370px] max-w-[calc(100vw-24px)] rounded-3xl border-2 border-[#37464f] bg-[#131f24] shadow-2xl z-40 overflow-hidden duo-popover-animate select-none"
                     onMouseEnter={() => openPopover('streak')}
                     onMouseLeave={scheduleClose}
                   >
@@ -583,7 +583,7 @@ export const Topbar: React.FC = () => {
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] right-[-60px] sm:right-[-40px] w-[340px] sm:w-[350px] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 p-5 select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] right-[-50px] sm:right-[-40px] w-[340px] sm:w-[350px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 p-5 select-none duo-popover-animate"
                     onMouseEnter={() => openPopover('gems')}
                     onMouseLeave={scheduleClose}
                   >
@@ -643,7 +643,7 @@ export const Topbar: React.FC = () => {
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] right-0 w-[340px] sm:w-[360px] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 p-5 select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] right-0 w-[340px] sm:w-[360px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[#2b3b44] bg-[#131f24] shadow-2xl z-40 p-5 select-none duo-popover-animate"
                     onMouseEnter={() => openPopover('hearts')}
                     onMouseLeave={scheduleClose}
                   >
