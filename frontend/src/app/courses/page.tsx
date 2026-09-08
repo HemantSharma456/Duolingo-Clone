@@ -6,8 +6,9 @@ import { FlagIcon } from '../../components/ui/FlagIcon';
 import { api } from '../../services/api';
 import { useGame } from '../../context/GameContext';
 import { CourseItem } from '../../types';
+import { COURSE_ID_TO_LANG, LANG_TO_COURSE_ID } from '../../services/curriculumFallback';
 
-// Order and display metadata matching real Duolingo catalog screenshot
+// Order and display metadata matching real Duolingo catalog screenshot (all 13 courses)
 const DEFAULT_COURSES = [
   { id: 1, title: 'Spanish', language_code: 'es', learner_count: '42.2M learners' },
   { id: 2, title: 'French', language_code: 'fr', learner_count: '22.8M learners' },
@@ -21,6 +22,7 @@ const DEFAULT_COURSES = [
   { id: 12, title: 'Chinese (Simplified)', language_code: 'zh', learner_count: '10.4M learners' },
   { id: 13, title: 'Russian', language_code: 'ru', learner_count: '8.6M learners' },
   { id: 8, title: 'English', language_code: 'en', learner_count: '15.9M learners' },
+  { id: 5, title: 'Portuguese', language_code: 'pt', learner_count: '8.1M learners' },
 ];
 
 export default function CoursesPage() {
@@ -51,8 +53,15 @@ export default function CoursesPage() {
 
   const handleSelectCourse = async (courseId: number) => {
     setLoadingId(courseId);
+    const selected = courses.find((c) => c.id === courseId) || DEFAULT_COURSES.find((c) => c.id === courseId);
     if (typeof window !== 'undefined') {
       localStorage.setItem('duo_active_course_id', courseId.toString());
+      if (selected?.language_code) {
+        localStorage.setItem('duo_active_lang', selected.language_code);
+      } else if (COURSE_ID_TO_LANG[courseId]) {
+        localStorage.setItem('duo_active_lang', COURSE_ID_TO_LANG[courseId]);
+      }
+      window.dispatchEvent(new Event('duo_course_changed'));
     }
     try {
       await api.selectCourse(courseId);
@@ -67,7 +76,20 @@ export default function CoursesPage() {
   };
 
   // Determine current active course
-  const currentCourseId = user?.current_course_id ?? 2; // Default to French if not set
+  const currentCourseId = (() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('duo_active_course_id');
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]) {
+        return LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()];
+      }
+    }
+    return user?.current_course_id ?? 7; // Default to Hindi
+  })();
 
   return (
     <div className="w-full max-w-[1080px] mx-auto pt-2 pb-20 select-none">

@@ -11,6 +11,7 @@ import { Button } from '../ui/Button';
 import { FlagIcon } from '../ui/FlagIcon';
 import { api } from '../../services/api';
 import { CourseItem } from '../../types';
+import { COURSE_ID_TO_LANG, LANG_TO_COURSE_ID } from '../../services/curriculumFallback';
 
 // Authentic Duolingo Header SVGs with crisp white outlines matching Image 4
 const FlameIcon = () => (
@@ -270,33 +271,84 @@ export const Topbar: React.FC = () => {
   }, []);
 
 
-  // Determine active course
-  const activeCourse =
-    courses.find((c) => c.id === user?.current_course_id) ||
-    courses.find((c) => c.language_code === 'ja') ||
-    courses[0] || {
-      id: 6,
-      title: 'Japanese',
-      flag_emoji: '🇯🇵',
-      language_code: 'ja',
-      learner_count: '18.1M learners',
+  // Comprehensive courses list for topbar switcher (all 13 courses)
+  const DEFAULT_COURSES_LIST = [
+    { id: 7, title: 'Hindi', language_code: 'hi', flag_emoji: '🇮🇳' },
+    { id: 6, title: 'Japanese', language_code: 'ja', flag_emoji: '🇯🇵' },
+    { id: 1, title: 'Spanish', language_code: 'es', flag_emoji: '🇪🇸' },
+    { id: 2, title: 'French', language_code: 'fr', flag_emoji: '🇫🇷' },
+    { id: 3, title: 'German', language_code: 'de', flag_emoji: '🇩🇪' },
+    { id: 4, title: 'Italian', language_code: 'it', flag_emoji: '🇮🇹' },
+    { id: 5, title: 'Portuguese', language_code: 'pt', flag_emoji: '🇧🇷' },
+    { id: 11, title: 'Korean', language_code: 'ko', flag_emoji: '🇰🇷' },
+    { id: 12, title: 'Chinese', language_code: 'zh', flag_emoji: '🇨🇳' },
+    { id: 13, title: 'Russian', language_code: 'ru', flag_emoji: '🇷🇺' },
+    { id: 8, title: 'English', language_code: 'en', flag_emoji: '🇺🇸' },
+    { id: 10, title: 'Math', language_code: 'math', flag_emoji: '➗' },
+    { id: 9, title: 'Chess', language_code: 'chess', flag_emoji: '♟️' },
+  ];
+
+  // Determine active course prioritizing localStorage then user object
+  const [activeCourseId, setActiveCourseId] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('duo_active_course_id');
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]) {
+        return LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()];
+      }
+    }
+    return user?.current_course_id ?? 7;
+  });
+
+  useEffect(() => {
+    const handleCourseChanged = () => {
+      const stored = localStorage.getItem('duo_active_course_id');
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        if (!isNaN(parsed) && parsed > 0) {
+          setActiveCourseId(parsed);
+          return;
+        }
+      }
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]) {
+        setActiveCourseId(LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]);
+      }
     };
+    window.addEventListener('duo_course_changed', handleCourseChanged);
+    return () => window.removeEventListener('duo_course_changed', handleCourseChanged);
+  }, []);
+
+  const activeCourse =
+    courses.find((c) => c.id === activeCourseId) ||
+    DEFAULT_COURSES_LIST.find((c) => c.id === activeCourseId) ||
+    courses.find((c) => c.id === user?.current_course_id) ||
+    DEFAULT_COURSES_LIST[0];
 
   const handleSelectCourse = async (courseId: number) => {
+    const courseObj = courses.find((c) => c.id === courseId) || DEFAULT_COURSES_LIST.find((c) => c.id === courseId);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('duo_active_course_id', courseId.toString());
+      if (courseObj?.language_code) {
+        localStorage.setItem('duo_active_lang', courseObj.language_code);
+      } else if (COURSE_ID_TO_LANG[courseId]) {
+        localStorage.setItem('duo_active_lang', COURSE_ID_TO_LANG[courseId]);
+      }
+      window.dispatchEvent(new Event('duo_course_changed'));
+    }
+    setActivePopover(null);
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('duo_active_course_id', courseId.toString());
-      }
       await api.selectCourse(courseId);
-      setActivePopover(null);
       await refreshUser();
-      if (pathname === '/') {
-        window.location.reload();
-      } else {
-        router.push('/');
-      }
-    } catch (err) {
-      console.error('Failed to select course:', err);
+    } catch {}
+    if (pathname === '/') {
+      window.location.reload();
+    } else {
+      router.push('/');
     }
   };
 
@@ -374,7 +426,7 @@ export const Topbar: React.FC = () => {
 
                   {/* Popover Card */}
                   <div
-                    className="absolute top-[calc(100%+8px)] left-0 sm:left-[-30px] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] shadow-2xl z-40 overflow-hidden select-none duo-popover-animate"
+                    className="absolute top-[calc(100%+8px)] left-0 sm:left-[-30px] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl border-2 border-[var(--border-color)] bg-[var(--bg-surface)] shadow-2xl z-40 overflow-hidden select-none duo-popover-animate max-h-[420px] overflow-y-auto"
                     onMouseEnter={() => openPopover('flag')}
                     onMouseLeave={scheduleClose}
                   >
@@ -385,19 +437,32 @@ export const Topbar: React.FC = () => {
                     {/* Divider Line */}
                     <div className="border-t border-[var(--border-color)]" />
 
-                    {/* Active / Enrolled Course */}
-                    <button
-                      type="button"
-                      onClick={() => setActivePopover(null)}
-                      className="w-full flex items-center gap-3.5 px-4.5 py-3 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-left transition-colors cursor-pointer"
-                    >
-                      <div className="w-[36px] h-[26px] rounded-lg overflow-hidden border-2 border-white shadow-xs flex items-center justify-center shrink-0">
-                        <FlagIcon code={activeCourse.language_code} width={36} height={26} />
-                      </div>
-                      <span className="font-black text-[15px] text-[#1cb0f6] leading-none">
-                        {activeCourse.title}
-                      </span>
-                    </button>
+                    {/* Course list in dropdown */}
+                    {DEFAULT_COURSES_LIST.map((c) => {
+                      const isCurrent = c.id === activeCourse.id;
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => handleSelectCourse(c.id)}
+                          className={`w-full flex items-center justify-between px-4.5 py-2.5 text-left transition-colors cursor-pointer ${
+                            isCurrent ? 'bg-[var(--bg-subtle)]' : 'hover:bg-[var(--bg-subtle)]/70'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-[32px] h-[22px] rounded overflow-hidden border border-white/60 shadow-2xs flex items-center justify-center shrink-0">
+                              <FlagIcon code={c.language_code} width={32} height={22} />
+                            </div>
+                            <span className={`font-black text-[14px] leading-none ${isCurrent ? 'text-[#1cb0f6]' : 'text-[var(--text-primary)]'}`}>
+                              {c.title}
+                            </span>
+                          </div>
+                          {isCurrent && (
+                            <span className="text-[#1cb0f6] font-black text-sm">✓</span>
+                          )}
+                        </button>
+                      );
+                    })}
 
                     {/* Divider Line */}
                     <div className="border-t border-[var(--border-color)]" />
@@ -406,12 +471,12 @@ export const Topbar: React.FC = () => {
                     <Link
                       href="/courses"
                       onClick={() => setActivePopover(null)}
-                      className="w-full flex items-center gap-3.5 px-4.5 py-3.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] no-underline transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-3.5 px-4.5 py-3 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] no-underline transition-colors cursor-pointer group"
                     >
-                      <div className="w-8 h-8 rounded-lg border-2 border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-hover:border-[var(--text-secondary)] transition-colors shrink-0">
+                      <div className="w-7 h-7 rounded-lg border-2 border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-hover:border-[var(--text-secondary)] transition-colors shrink-0">
                         <svg
-                          width="15"
-                          height="15"
+                          width="14"
+                          height="14"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
@@ -422,8 +487,8 @@ export const Topbar: React.FC = () => {
                           <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
                       </div>
-                      <span className="font-black text-[14px] text-[var(--text-primary)] leading-none">
-                        Add a new course
+                      <span className="font-black text-[13px] text-[var(--text-primary)] leading-none">
+                        Explore all courses
                       </span>
                     </Link>
                   </div>

@@ -8,6 +8,8 @@ interface JumpModalProps {
   unitNumber: number;
   title: string;
   colorTheme: string;
+  courseId?: number;
+  langCode?: string;
   onClose: () => void;
   onJump?: () => void;
 }
@@ -17,12 +19,15 @@ export const JumpModal: React.FC<JumpModalProps> = ({
   unitNumber,
   title,
   colorTheme,
+  courseId,
+  langCode,
   onClose,
   onJump,
 }) => {
   if (!isOpen) return null;
 
   const targetLevel = (unitNumber - 1) * 6 + 1;
+  const targetHref = `/lesson/${targetLevel}?course_id=${courseId || 7}${langCode ? `&lang=${langCode}` : ''}`;
 
   const handleStartTest = () => {
     if (onJump) onJump();
@@ -56,7 +61,7 @@ export const JumpModal: React.FC<JumpModalProps> = ({
         </p>
 
         <div className="flex flex-col gap-3">
-          <Link href={`/lesson/${targetLevel}`} className="no-underline block" onClick={handleStartTest}>
+          <Link href={targetHref} className="no-underline block" onClick={handleStartTest}>
             <button
               type="button"
               className="w-full h-12 rounded-2xl text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md hover:brightness-110 active:translate-y-0.5 border-b-4"

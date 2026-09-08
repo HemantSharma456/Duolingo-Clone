@@ -15,6 +15,7 @@ interface LessonCompleteModalProps {
   accuracy: number;
   currentLessonId?: number;
   courseId?: number;
+  langCode?: string;
 }
 
 export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
@@ -23,6 +24,7 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
   accuracy,
   currentLessonId = 1,
   courseId,
+  langCode,
 }) => {
   const router = useRouter();
   const { playCompleteFanfare } = useSound();
@@ -54,7 +56,10 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
     if (isFinalCourseLevel || isNextChest) {
       router.push('/');
     } else {
-      const query = courseId ? `?course_id=${courseId}` : '';
+      const params = new URLSearchParams();
+      if (courseId) params.set('course_id', courseId.toString());
+      if (langCode) params.set('lang', langCode);
+      const query = params.toString() ? `?${params.toString()}` : '';
       router.push(`/lesson/${nextLessonId}${query}`);
     }
   };

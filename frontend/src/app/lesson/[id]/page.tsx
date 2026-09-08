@@ -17,7 +17,7 @@ import { FillInBlank } from '../../../components/exercises/FillInBlank';
 import { TypeAnswer } from '../../../components/exercises/TypeAnswer';
 import { DuoOwl } from '../../../components/mascot/DuoOwl';
 import { progressManager } from '../../../services/progressManager';
-import { getFallbackLesson, evaluateLocalExercise } from '../../../services/curriculumFallback';
+import { getFallbackLesson, evaluateLocalExercise, COURSE_ID_TO_LANG, LANG_TO_COURSE_ID } from '../../../services/curriculumFallback';
 
 export default function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -44,6 +44,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
   const [outOfHeartsOpen, setOutOfHeartsOpen] = useState(false);
   const [completeResult, setCompleteResult] = useState<LessonCompleteResponse | null>(null);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState<string>('hi');
 
   // Consistently resolve active course ID
   const resolveActiveCourseId = (): number => {
@@ -52,15 +53,34 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
       const qCourse = urlParams.get('course_id');
       if (qCourse) {
         const parsed = parseInt(qCourse, 10);
-        if (!isNaN(parsed)) return parsed;
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      const qLang = urlParams.get('lang');
+      if (qLang && LANG_TO_COURSE_ID[qLang.toLowerCase().trim()]) {
+        return LANG_TO_COURSE_ID[qLang.toLowerCase().trim()];
       }
       const stored = localStorage.getItem('duo_active_course_id');
       if (stored) {
         const parsed = parseInt(stored, 10);
-        if (!isNaN(parsed)) return parsed;
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]) {
+        return LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()];
       }
     }
-    return user?.current_course_id || 8;
+    return user?.current_course_id || 7;
+  };
+
+  const resolveActiveLang = (courseId: number): string => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const qLang = urlParams.get('lang');
+      if (qLang && qLang.trim()) return qLang.toLowerCase().trim();
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && storedLang.trim()) return storedLang.toLowerCase().trim();
+    }
+    return COURSE_ID_TO_LANG[courseId] || 'hi';
   };
 
   useEffect(() => {
@@ -84,12 +104,8 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
 
     async function loadLesson() {
       const activeCourseId = resolveActiveCourseId();
-      let activeLang: string | undefined = undefined;
-      if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search);
-        const qLang = urlParams.get('lang');
-        if (qLang) activeLang = qLang;
-      }
+      const activeLang = resolveActiveLang(activeCourseId);
+      setCurrentLang(activeLang);
 
       try {
         const data = await api.getLesson(lessonId, activeCourseId, activeLang);
@@ -350,6 +366,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
         accuracy={accuracy}
         currentLessonId={lessonId}
         courseId={resolveActiveCourseId()}
+        langCode={currentLang}
       />
     </div>
   );

@@ -15,6 +15,7 @@ import { MatchPairs } from '../../components/exercises/MatchPairs';
 import { FillInBlank } from '../../components/exercises/FillInBlank';
 import { TypeAnswer } from '../../components/exercises/TypeAnswer';
 import { DuoOwl } from '../../components/mascot/DuoOwl';
+import { getFallbackLesson, COURSE_ID_TO_LANG, LANG_TO_COURSE_ID } from '../../services/curriculumFallback';
 
 const FALLBACK_PRACTICE_LESSON: Lesson = {
   id: 9999,
@@ -109,18 +110,43 @@ export default function PracticePage() {
   const [completeResult, setCompleteResult] = useState<LessonCompleteResponse | null>(null);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
 
+  const resolveActiveCourseId = (): number => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('duo_active_course_id');
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]) {
+        return LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()];
+      }
+    }
+    return user?.current_course_id || 7;
+  };
+
+  const resolveActiveLang = (courseId: number): string => {
+    if (typeof window !== 'undefined') {
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && storedLang.trim()) return storedLang.toLowerCase().trim();
+    }
+    return COURSE_ID_TO_LANG[courseId] || 'hi';
+  };
+
   useEffect(() => {
     async function loadPractice() {
+      const activeCourseId = resolveActiveCourseId();
+      const activeLang = resolveActiveLang(activeCourseId);
       try {
-        const data = await api.getPracticeSession();
+        const data = await api.getPracticeSession(activeCourseId, activeLang);
         if (data && data.exercises && data.exercises.length > 0) {
           setLesson(data);
         } else {
-          setLesson(FALLBACK_PRACTICE_LESSON);
+          setLesson(getFallbackLesson(1, activeCourseId, activeLang));
         }
       } catch (err: any) {
         console.warn('Backend practice unavailable, using fallback exercises:', err);
-        setLesson(FALLBACK_PRACTICE_LESSON);
+        setLesson(getFallbackLesson(1, activeCourseId, activeLang));
       } finally {
         setLoading(false);
       }

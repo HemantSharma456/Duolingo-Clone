@@ -10,6 +10,7 @@ interface SkillPopoverProps {
   isCompleted?: boolean;
   lessonId: number | null;
   courseId?: number;
+  langCode?: string;
   colorTheme?: string;
   onClose: () => void;
 }
@@ -57,6 +58,7 @@ export const SkillPopover: React.FC<SkillPopoverProps> = ({
   isCompleted = false,
   lessonId,
   courseId,
+  langCode,
   colorTheme = '#58cc02',
   onClose,
 }) => {
@@ -71,6 +73,8 @@ export const SkillPopover: React.FC<SkillPopoverProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
+
+  const targetUrl = `/lesson/${lessonId || 1}?course_id=${courseId || 6}${langCode ? `&lang=${langCode}` : ''}`;
 
   return (
     <>
@@ -111,7 +115,7 @@ export const SkillPopover: React.FC<SkillPopoverProps> = ({
 
           {/* Elongated Pill 3D White Button with Theme Color Text */}
           <Link
-            href={`/lesson/${lessonId || 1}${courseId ? `?course_id=${courseId}` : ''}`}
+            href={targetUrl}
             className="w-full h-[52px] rounded-2xl bg-white hover:bg-[#f7f7f7] border-b-[4px] border-[#e5e5e5] active:border-b-0 active:translate-y-1 font-black text-[15px] uppercase tracking-wider transition-all cursor-pointer shadow-xs flex items-center justify-center no-underline select-none"
             style={{ color: colorTheme }}
           >

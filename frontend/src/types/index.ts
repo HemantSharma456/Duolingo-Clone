@@ -70,8 +70,8 @@ export interface Exercise {
   order_index: number;
   type: ExerciseType;
   prompt: string;
-  prompt_translation?: string;
-  audio_text?: string;
+  prompt_translation?: string | null;
+  audio_text?: string | null;
   options?: any;
   metadata?: any;
 }

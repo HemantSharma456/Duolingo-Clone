@@ -30,6 +30,8 @@ import {
 import { JumpModal } from '../components/path/JumpModal';
 import { PathRightRail } from '../components/layout/PathRightRail';
 
+import { COURSE_ID_TO_LANG, LANG_TO_COURSE_ID } from '../services/curriculumFallback';
+
 interface PathNodeConfig {
   level: number;
   type: 'star' | 'chest' | 'headphones' | 'trophy' | 'jump';
@@ -121,10 +123,22 @@ export default function LearnPage() {
       const stored = localStorage.getItem('duo_active_course_id');
       if (stored) {
         const parsed = parseInt(stored, 10);
-        if (!isNaN(parsed)) return parsed;
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+      }
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()]) {
+        return LANG_TO_COURSE_ID[storedLang.toLowerCase().trim()];
       }
     }
-    return user?.current_course_id || 8;
+    return user?.current_course_id || 7;
+  })();
+
+  const currentLangCode = (() => {
+    if (typeof window !== 'undefined') {
+      const storedLang = localStorage.getItem('duo_active_lang');
+      if (storedLang && storedLang.trim()) return storedLang.toLowerCase().trim();
+    }
+    return COURSE_ID_TO_LANG[currentCourseId] || 'hi';
   })();
 
   const [pathData, setPathData] = useState<CoursePathResponse | null>(null);
@@ -272,6 +286,8 @@ export default function LearnPage() {
         unitNumber={jumpModal.unitNumber}
         title={jumpModal.title}
         colorTheme={jumpModal.colorTheme}
+        courseId={currentCourseId}
+        langCode={currentLangCode}
         onClose={() => setJumpModal((prev) => ({ ...prev, isOpen: false }))}
         onJump={() => handleJump((jumpModal.unitNumber - 1) * 6 + 1)}
       />
@@ -406,6 +422,7 @@ export default function LearnPage() {
                           isCompleted={false}
                           lessonId={node.level}
                           courseId={currentCourseId}
+                          langCode={currentLangCode}
                           colorTheme={unit.colorTheme}
                           onClose={() => setActivePopoverLevel(null)}
                         />
@@ -462,6 +479,7 @@ export default function LearnPage() {
                           isCompleted={true}
                           lessonId={node.level}
                           courseId={currentCourseId}
+                          langCode={currentLangCode}
                           colorTheme={unit.colorTheme}
                           onClose={() => setActivePopoverLevel(null)}
                         />

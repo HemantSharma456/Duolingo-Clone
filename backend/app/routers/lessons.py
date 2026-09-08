@@ -71,18 +71,18 @@ def get_practice_session(
     """
     # 1. Resolve language code
     lang_code = None
-    if course_id:
+    if lang and lang.strip():
+        lang_code = lang.lower().strip()
+    if not lang_code and course_id:
         c = db.query(Course).filter(Course.id == course_id).first()
         if c:
             lang_code = c.language_code
-    if not lang_code and lang:
-        lang_code = lang.lower().strip()
     if not lang_code and user and user.current_course_id:
         c = db.query(Course).filter(Course.id == user.current_course_id).first()
         if c:
             lang_code = c.language_code
     if not lang_code:
-        lang_code = "en"
+        lang_code = "hi"
 
     # Use calibrated exercises for the specific language
     calibrated = get_calibrated_level_exercises(lang_code, 1)
@@ -174,15 +174,15 @@ def get_lesson(
     """
     lang_code = None
 
-    # 1. Course ID query parameter takes highest precedence
-    if course_id:
+    # 1. Explicit lang query parameter takes highest precedence
+    if lang and lang.strip():
+        lang_code = lang.lower().strip()
+
+    # 2. Course ID query parameter
+    if not lang_code and course_id:
         course_obj = db.query(Course).filter(Course.id == course_id).first()
         if course_obj:
             lang_code = course_obj.language_code
-
-    # 2. Explicit lang query parameter
-    if not lang_code and lang:
-        lang_code = lang.lower().strip()
 
     # 3. User's active course in database
     if not lang_code and user and user.current_course_id:
@@ -190,9 +190,9 @@ def get_lesson(
         if course_obj:
             lang_code = course_obj.language_code
 
-    # 4. Fallback to English (NEVER Spanish!)
+    # 4. Fallback to Hindi
     if not lang_code:
-        lang_code = "en"
+        lang_code = "hi"
 
     # Progressive calibrated curriculum for the active language & level
     calibrated = get_calibrated_level_exercises(lang_code, lesson_id)
